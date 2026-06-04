@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: rulercraft-war-tracker
+    runtime: docker
+    plan: free
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: VAPID_PUBLIC_KEY
+        generateValue: false
+      - key: VAPID_PRIVATE_KEY
+        generateValue: false
+    disk:
+      name: data
+      mountPath: /app/data
+      sizeGB: 1
