@@ -1,0 +1,12 @@
+{
+  "name": "rulercraft-war-tracker",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18.0.0" },
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2",
+    "web-push": "^3.6.6"
+  }
+}
