@@ -552,8 +552,9 @@ function parseSiegeMarkers(json) {
   const iconsSeen = [...new Set(Object.values(markers).map(m => m.icon))];
   console.debug('[parseSiegeMarkers] total markers:', Object.keys(markers).length, '| icons:', iconsSeen);
   for (const [id, m] of Object.entries(markers)) {
-    // Accept 'siegewar.battle' or any icon containing 'battle' (resilient to minor naming changes)
-    if (!m.icon || !m.icon.includes('battle')) continue;
+    // Accept ANY marker in the siegewar markerset that has a Siege desc
+    // (icon varies: "fire" between sessions, "siegewar.battle" during active battle, etc.)
+    if (!m.desc || !m.desc.includes('Siege:')) continue;
     const parsed = parseDesc(m.desc || '');
     wars.push({ id, x: m.x, z: m.z, isOngoing: true, ...parsed });
   }
@@ -569,21 +570,27 @@ function parseTownMarkers(json) {
   const towns = [];
 
   for (const [id, m] of Object.entries(markers)) {
-    // Skip non-town markers (offline players, rulers, etc.)
     if (!m.label || !m.desc) continue;
-    // Only fortress / town icons
-    if (m.icon !== 'fortress' && m.icon !== 'town') continue;
+    // Accept fortress, town, ruler icons — but NOT outpost
+    const icon = (m.icon || '').toLowerCase();
+    if (icon === 'outpost') continue;
+    if (icon !== 'fortress' && icon !== 'town' && icon !== 'ruler') continue;
 
     const desc  = m.desc || '';
     const label = m.label || '';
 
-    // Public Teleport check
-    const tpEnabled = /Public Teleport[^<]*Enabled/i.test(desc);
+    // Public Teleport: search the RAW HTML for "Public Teleport" followed eventually by "Enabled"
+    // The HTML looks like: Public Teleport:</span> Enabled</span>
+    // or: Public Teleport:</span> Disabled</span>
+    // Strip all tags then search the plain text
+    const plainDesc = desc.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+    const tpMatch   = plainDesc.match(/Public Teleport\s*[:\s]+(\w+)/i);
+    const tpEnabled = tpMatch ? tpMatch[1].toLowerCase() === 'enabled' : false;
 
     // Nation = second fandom wiki link in desc
     // e.g. href="https://rulercraft.fandom.com/wiki/Sea_Drifters"
     const wikiMatches = [...desc.matchAll(/fandom\.com\/wiki\/([^"\/]+)"/g)];
-    // First match is usually the town itself, second is the nation
+    // First match is the town itself, second is the nation
     const nation = wikiMatches.length >= 2
       ? decodeURIComponent(wikiMatches[1][1]).replace(/_/g, ' ')
       : (wikiMatches.length === 1 ? decodeURIComponent(wikiMatches[0][1]).replace(/_/g, ' ') : '');
@@ -966,7 +973,7 @@ function buildTravelTargets() {
   // Add active siege wars as targets
   const siegeMarkers = rawMarkers?.sets?.['siegewar.markerset']?.markers || {};
   for (const [id, m] of Object.entries(siegeMarkers)) {
-    if (m.icon !== 'siegewar.battle') continue;
+    if (!m.desc || !m.desc.includes('Siege:')) continue;
     const plain = (m.desc||'').replace(/<[^>]+>/g,' ');
     const tm    = plain.match(/Town:\s*(\S+)/i);
     const name  = tm ? tm[1].replace(/_/g,' ') : (m.label||id);
@@ -1106,7 +1113,7 @@ function adminDiag() {
   const allIcons = [...new Set(Object.values(siegeMarkers).map(m => m.icon))];
   adminLog('Siege markerset total: ' + Object.keys(siegeMarkers).length, 'info');
   adminLog('All siege icons seen: ' + (allIcons.join(', ') || '(none)'), 'info');
-  adminLog('Battle markers (icon contains "battle"): ' + Object.values(siegeMarkers).filter(m=>m.icon&&m.icon.includes('battle')).length, 'info');
+  adminLog('Wars parsed (has Siege: in desc): ' + Object.values(siegeMarkers).filter(m=>m.desc&&m.desc.includes('Siege:')).length, 'info');
   adminLog('Live wars parsed: ' + parseSiegeMarkers(rawMarkers).length, 'info');
   adminLog('Town markers total: ' + Object.keys(townMarkers).length, 'info');
   adminLog('Town markers with public TP: ' + parseTownMarkers(rawMarkers).filter(t=>t.tpEnabled).length, 'info');
