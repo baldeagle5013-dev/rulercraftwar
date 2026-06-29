@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RulerCraft War Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<!-- OneSignal Push Notifications -->
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -15,25 +14,11 @@
 </script>
 <style>
 :root {
-  --black:   #08080a;
-  --bg:      #0d0d10;
-  --surface: #131318;
-  --surf2:   #1a1a22;
-  --surf3:   #21212c;
-  --line:    #2a2a36;
-  --line2:   #363644;
-  --muted:   #5a5a70;
-  --dim:     #8888a4;
-  --body:    #b8b8cc;
-  --main:    #ddddf0;
-  --white:   #f0f0ff;
-  --accent:  #7c6fff;
-  --red:     #e86060;
-  --red2:    #ff8080;
-  --green:   #50d49a;
-  --green2:  #80ffbc;
-  --gold:    #d4aa50;
-  --r: 4px;
+  --black:#08080a; --bg:#0d0d10; --surface:#131318; --surf2:#1a1a22; --surf3:#21212c;
+  --line:#2a2a36; --line2:#363644; --muted:#5a5a70; --dim:#8888a4;
+  --body:#b8b8cc; --main:#ddddf0; --white:#f0f0ff;
+  --accent:#7c6fff; --red:#e86060; --red2:#ff8080; --green:#50d49a; --green2:#80ffbc;
+  --gold:#d4aa50; --r:4px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:14px}
@@ -42,62 +27,54 @@ body{background:var(--bg);color:var(--main);font-family:'IBM Plex Sans',sans-ser
 ::-webkit-scrollbar-track{background:var(--surface)}
 ::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
 
-/* ── HEADER ── */
-header{background:var(--black);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:50;height:52px;gap:0}
+/* HEADER */
+header{background:var(--black);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:50;height:52px}
 .brand{font-family:'IBM Plex Mono',monospace;font-size:.82rem;font-weight:600;color:var(--white);letter-spacing:.1em;text-transform:uppercase;padding-right:24px;border-right:1px solid var(--line);margin-right:6px;white-space:nowrap}
 .brand em{color:var(--accent);font-style:normal}
 nav{display:flex;height:52px}
-nav a{display:flex;align-items:center;padding:0 15px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;border-bottom:2px solid transparent;cursor:pointer;transition:color .15s,border-color .15s;white-space:nowrap}
-nav a:hover{color:var(--body)}
-nav a.active{color:var(--white);border-bottom-color:var(--accent)}
+nav a{display:flex;align-items:center;padding:0 15px;font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;border-bottom:2px solid transparent;cursor:pointer;transition:color .15s,border-color .15s;white-space:nowrap}
+nav a:hover{color:var(--body)} nav a.active{color:var(--white);border-bottom-color:var(--accent)}
 .header-right{margin-left:auto;display:flex;align-items:center;gap:16px;flex-shrink:0}
 .live-pill{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.1em;color:var(--green);display:none;align-items:center;gap:6px}
 .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s step-end infinite}
 .update-info{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);text-align:right;line-height:1.4}
 .update-info span{display:block}
+.login-btn{font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:500;letter-spacing:.08em;padding:5px 12px;background:none;border:1px solid var(--line2);border-radius:var(--r);color:var(--dim);cursor:pointer;transition:border-color .15s,color .15s}
+.login-btn:hover{border-color:var(--accent);color:var(--accent)}
+.login-btn.logged-in{border-color:rgba(80,212,154,.3);color:var(--green2)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
 
-/* ── PAGES ── */
-main{overflow-y:auto}
-.page{display:none}
-.page.active{display:block}
+/* PAGES */
+main{overflow-y:auto} .page{display:none} .page.active{display:block}
 .wrap{max-width:1180px;margin:0 auto;padding:32px 24px}
 
-/* ── SHARED ── */
+/* SHARED */
 .section-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);border-left:2px solid var(--accent);padding-left:10px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
 .section-label span{color:var(--muted);font-weight:400;letter-spacing:.05em}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .panel-head{padding:11px 16px;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--body);display:flex;justify-content:space-between;align-items:center;font-weight:500}
-.panel-head a{color:var(--accent);cursor:pointer;font-size:.65rem;font-weight:400;letter-spacing:.08em}
+.panel-head a{color:var(--accent);cursor:pointer;font-size:.65rem;font-weight:400}
 .panel-head a:hover{text-decoration:underline}
-
 .list-row{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid var(--line);font-size:.88rem;cursor:pointer;transition:background .12s}
-.list-row:last-child{border-bottom:none}
-.list-row:hover{background:var(--surf2)}
-.row-main{color:var(--white);font-weight:600;font-size:.9rem}
-.row-sub{color:var(--body);font-size:.78rem;margin-top:2px}
+.list-row:last-child{border-bottom:none} .list-row:hover{background:var(--surf2)}
+.row-main{color:var(--white);font-weight:600;font-size:.9rem} .row-sub{color:var(--body);font-size:.78rem;margin-top:2px}
 .row-right{text-align:right;flex-shrink:0;margin-left:14px}
-
 .tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.63rem;font-weight:600;letter-spacing:.06em;padding:2px 7px;border-radius:3px}
 .tag-live{background:rgba(232,96,96,.15);color:var(--red2);border:1px solid rgba(232,96,96,.3)}
 .tag-atkwin{background:rgba(232,96,96,.12);color:var(--red2);border:1px solid rgba(232,96,96,.25)}
 .tag-defwin{background:rgba(80,212,154,.12);color:var(--green2);border:1px solid rgba(80,212,154,.25)}
 .tag-ended{background:rgba(90,90,112,.15);color:var(--dim);border:1px solid var(--line2)}
 
-/* ── HOME ── */
+/* HOME */
 .home-kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 22px;display:inline-flex;flex-direction:column;min-width:200px;margin-bottom:22px}
 .kpi-label{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
 .kpi-value{font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:600;color:var(--white);line-height:1}
 .kpi-value.accent{color:var(--accent)}
-
 .home-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-
 .alert-bar{background:rgba(232,96,96,.08);border:1px solid rgba(232,96,96,.25);border-left:3px solid var(--red);border-radius:var(--r);padding:11px 16px;display:flex;align-items:center;gap:10px;margin-bottom:18px;font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--body)}
-.alert-bar strong{color:var(--red2)}
-.alert-bar a{color:var(--accent);cursor:pointer}
-.alert-bar a:hover{text-decoration:underline}
+.alert-bar strong{color:var(--red2)} .alert-bar a{color:var(--accent);cursor:pointer}
 
-/* ── WARS TABLE ── */
+/* WARS TABLE */
 .wars-section{margin-bottom:36px}
 table{width:100%;border-collapse:collapse;font-size:.85rem}
 thead th{font-family:'IBM Plex Mono',monospace;font-size:.63rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-align:left;padding:8px 14px;border-bottom:1px solid var(--line2);white-space:nowrap;background:var(--surface)}
@@ -105,9 +82,7 @@ tbody tr{border-bottom:1px solid var(--line);cursor:pointer;transition:backgroun
 tbody tr:hover{background:var(--surf2)}
 td{padding:11px 14px;color:var(--main);vertical-align:middle}
 td.muted{color:var(--dim)} td.mono{font-family:'IBM Plex Mono',monospace;font-size:.82rem}
-td.town{color:var(--white);font-weight:600;font-size:.88rem}
-td.atk{color:var(--red2);font-weight:600} td.def{color:var(--green2);font-weight:600}
-
+td.town{color:var(--white);font-weight:600} td.atk{color:var(--red2);font-weight:600} td.def{color:var(--green2);font-weight:600}
 .pts-cell{display:flex;align-items:center;gap:8px;white-space:nowrap}
 .pts-num{font-family:'IBM Plex Mono',monospace;font-size:.82rem;min-width:44px}
 .pts-num.r{color:var(--red2);text-align:right} .pts-num.g{color:var(--green2)}
@@ -115,33 +90,26 @@ td.atk{color:var(--red2);font-weight:600} td.def{color:var(--green2);font-weight
 .pts-fill{position:absolute;left:0;top:0;height:100%;background:var(--red);border-radius:2px}
 .war-timer{color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:.78rem}
 
-/* ── TOOLS ── */
+/* TOOLS */
 .tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
 .tool-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .tool-head{padding:16px 18px;border-bottom:1px solid var(--line)}
 .tool-title{font-family:'IBM Plex Mono',monospace;font-size:.85rem;font-weight:600;color:var(--white);letter-spacing:.04em;margin-bottom:4px}
 .tool-desc{font-size:.8rem;color:var(--body);line-height:1.55}
 .tool-body{padding:18px}
-
 .field-label{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:7px;display:block}
 .field-input{width:100%;background:var(--surf2);border:1px solid var(--line2);border-radius:var(--r);padding:9px 12px;color:var(--white);font-family:'IBM Plex Mono',monospace;font-size:.82rem;outline:none;transition:border-color .15s}
-.field-input:focus{border-color:var(--accent)}
-.field-input::placeholder{color:var(--muted)}
-
+.field-input:focus{border-color:var(--accent)} .field-input::placeholder{color:var(--muted)}
 .autocomplete-wrap{position:relative;margin-bottom:13px}
 .autocomplete-list{position:absolute;top:100%;left:0;right:0;background:var(--surf2);border:1px solid var(--line2);border-top:none;border-radius:0 0 var(--r) var(--r);max-height:200px;overflow-y:auto;z-index:100;display:none}
 .autocomplete-list.show{display:block}
 .autocomplete-item{padding:8px 12px;font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--main);cursor:pointer;border-bottom:1px solid var(--line);transition:background .1s}
-.autocomplete-item:last-child{border-bottom:none}
-.autocomplete-item:hover,.autocomplete-item.sel{background:var(--accent);color:#fff}
-
+.autocomplete-item:last-child{border-bottom:none} .autocomplete-item:hover{background:var(--accent);color:#fff}
 .btn{background:var(--accent);border:none;border-radius:var(--r);padding:9px 16px;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .15s;width:100%;margin-top:4px}
-.btn:hover{background:#6a5ee0}
-.btn:disabled{background:var(--muted);cursor:not-allowed;opacity:.6}
+.btn:hover{background:#6a5ee0} .btn:disabled{background:var(--muted);cursor:not-allowed;opacity:.6}
 .btn-outline{background:none;border:1px solid var(--line2);color:var(--body);margin-top:8px}
 .btn-outline:hover:not(:disabled){border-color:var(--accent);color:var(--accent);background:none}
 .btn-sm{width:auto;padding:5px 11px;font-size:.67rem}
-
 .result-box{background:var(--surf2);border:1px solid var(--line2);border-radius:var(--r);padding:14px 16px;margin-top:13px;display:none}
 .result-box.show{display:block}
 .result-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--line)}
@@ -150,80 +118,105 @@ td.atk{color:var(--red2);font-weight:600} td.def{color:var(--green2);font-weight
 .result-val{color:var(--white);font-weight:600;font-family:'IBM Plex Mono',monospace;font-size:.82rem}
 .map-link{color:var(--accent);text-decoration:none;font-size:.75rem;font-family:'IBM Plex Mono',monospace;font-weight:500}
 .map-link:hover{text-decoration:underline}
-
-/* Notif */
 .notif-nation-tag{display:inline-flex;align-items:center;gap:6px;background:var(--surf3);border:1px solid var(--line2);border-radius:3px;padding:4px 9px;font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--main);margin:2px}
-.notif-nation-tag button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.82rem;line-height:1;padding:0;transition:color .1s}
+.notif-nation-tag button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.82rem;padding:0;transition:color .1s}
 .notif-nation-tag button:hover{color:var(--red)}
 .notif-nations-wrap{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:11px;min-height:30px}
 .notif-status{font-family:'IBM Plex Mono',monospace;font-size:.72rem;margin-top:9px;padding:7px 11px;border-radius:var(--r);display:none;line-height:1.5}
 .notif-status.ok{display:block;background:rgba(80,212,154,.1);color:var(--green2);border:1px solid rgba(80,212,154,.25)}
 .notif-status.err{display:block;background:rgba(232,96,96,.1);color:var(--red2);border:1px solid rgba(232,96,96,.25)}
 .notif-status.info{display:block;background:rgba(124,111,255,.1);color:var(--accent);border:1px solid rgba(124,111,255,.25)}
-
-/* OneSignal widget styling */
 .onesignal-customlink-container{margin-top:14px}
 
-/* ── COMING SOON ── */
+/* RANKING / LEADERBOARD */
+.lb-tabs{display:flex;gap:8px;margin-bottom:18px}
+.lb-tab{font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:6px 16px;background:none;border:1px solid var(--line2);color:var(--dim);cursor:pointer;border-radius:var(--r);transition:all .15s}
+.lb-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(124,111,255,.08)}
+.lb-tab:hover:not(.active){color:var(--body)}
+.lb-table{width:100%;border-collapse:collapse}
+.lb-table th{font-family:'IBM Plex Mono',monospace;font-size:.63rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-align:left;padding:8px 14px;border-bottom:1px solid var(--line2);white-space:nowrap;cursor:pointer;user-select:none}
+.lb-table th:hover{color:var(--body)} .lb-table th.sorted{color:var(--accent)}
+.lb-table tbody tr{border-bottom:1px solid var(--line);transition:background .12s}
+.lb-table tbody tr:hover{background:var(--surf2)}
+.lb-table td{padding:10px 14px;font-size:.85rem}
+.rk{font-family:'IBM Plex Mono',monospace;font-size:.9rem;color:var(--muted);width:40px;text-align:center}
+.rk1{color:var(--gold)!important} .rk2{color:#aaa!important} .rk3{color:#a07040!important}
+.rat{font-family:'IBM Plex Mono',monospace;font-size:.9rem;font-weight:600;color:var(--accent)}
+.tier{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.65rem;font-weight:600;padding:2px 6px;border-radius:3px}
+.tier-S{background:rgba(212,170,80,.15);color:var(--gold);border:1px solid rgba(212,170,80,.3)}
+.tier-A{background:rgba(80,212,154,.1);color:var(--green2);border:1px solid rgba(80,212,154,.2)}
+.tier-B{background:rgba(124,111,255,.1);color:var(--accent);border:1px solid rgba(124,111,255,.2)}
+.tier-C{background:rgba(136,136,164,.1);color:var(--dim);border:1px solid rgba(136,136,164,.2)}
+.tier-D{background:rgba(232,96,96,.08);color:var(--red2);border:1px solid rgba(232,96,96,.15)}
+.nation-tag-sm{font-family:'IBM Plex Mono',monospace;font-size:.65rem;padding:1px 6px;border-radius:2px;background:rgba(124,111,255,.08);color:var(--accent);border:1px solid rgba(124,111,255,.15)}
+.delta-pos{color:var(--green2);font-family:'IBM Plex Mono',monospace;font-size:.82rem;font-weight:600}
+.delta-neg{color:var(--red2);font-family:'IBM Plex Mono',monospace;font-size:.82rem;font-weight:600}
+.delta-zero{color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.82rem}
+
+/* COMING SOON */
 .coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:10px;text-align:center}
 .cs-badge{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.14em;padding:5px 12px;border:1px solid var(--line2);border-radius:3px;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
 .cs-title{font-family:'IBM Plex Mono',monospace;font-size:1.05rem;font-weight:600;color:var(--body);letter-spacing:.1em;text-transform:uppercase}
 .cs-sub{font-size:.85rem;color:var(--muted);max-width:340px;line-height:1.65}
 
-/* ── WAR MODAL ── */
+/* WAR MODAL */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:40px 16px 24px;overflow-y:auto}
 .overlay.open{display:flex}
-.modal{background:var(--surface);border:1px solid var(--line2);border-radius:var(--r);width:100%;max-width:840px;position:relative;animation:fadeIn .18s ease}
+.modal{background:var(--surface);border:1px solid var(--line2);border-radius:var(--r);width:100%;max-width:900px;position:relative;animation:fadeIn .18s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .modal-close{position:absolute;top:13px;right:13px;background:var(--surf2);border:1px solid var(--line2);color:var(--dim);width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:3px;cursor:pointer;font-size:.9rem;transition:color .12s,background .12s;z-index:2}
 .modal-close:hover{background:var(--line2);color:var(--white)}
-
 .wm-header{padding:20px 22px 15px;border-bottom:1px solid var(--line)}
 .wm-town{font-family:'IBM Plex Mono',monospace;font-size:1.1rem;font-weight:600;color:var(--white);letter-spacing:.04em;margin-bottom:6px}
 .wm-meta{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--dim);letter-spacing:.06em;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .wm-body{padding:20px 22px}
-
 .score-split{display:grid;grid-template-columns:1fr 220px 1fr;gap:22px;margin-bottom:20px;align-items:start}
 .score-role{font-family:'IBM Plex Mono',monospace;font-size:.63rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
 .score-nation{font-family:'IBM Plex Mono',monospace;font-size:1rem;font-weight:600;margin-bottom:4px}
 .score-nation.r{color:var(--red2)} .score-nation.g{color:var(--green2)}
 .score-pts{font-family:'IBM Plex Mono',monospace;font-size:2.4rem;font-weight:600;line-height:1;margin-top:6px}
 .score-pts.r{color:var(--red2)} .score-pts.g{color:var(--green2)}
-
 .score-center{display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:6px}
 .vs-text{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.2em;color:var(--muted)}
-
 .bar-wrap{width:100%}
 .bar-labels{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:.63rem;color:var(--body);margin-bottom:5px;font-weight:500}
 .bar-track{height:7px;background:rgba(80,212,154,.15);border-radius:2px;position:relative;overflow:hidden}
 .bar-fill{position:absolute;left:0;top:0;height:100%;background:var(--red);transition:width .5s}
-
-.banner-box{border:1px solid var(--line2);border-radius:3px;padding:9px 12px;width:100%;text-align:center;background:var(--surf2)}
-.banner-box .bl{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.banner-box .bv{font-family:'IBM Plex Mono',monospace;font-size:.82rem;font-weight:600}
-
-/* Siege balance indicator in score center */
-.siege-balance-box{border:1px solid var(--line2);border-radius:3px;padding:8px 12px;width:100%;text-align:center;background:var(--surf2)}
-.siege-balance-box .sbl{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
-.siege-balance-box .sbv{font-family:'IBM Plex Mono',monospace;font-size:.88rem;font-weight:600}
-
+.banner-box,.siege-balance-box{border:1px solid var(--line2);border-radius:3px;padding:9px 12px;width:100%;text-align:center;background:var(--surf2)}
+.banner-box .bl,.siege-balance-box .sbl{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.banner-box .bv,.siege-balance-box .sbv{font-family:'IBM Plex Mono',monospace;font-size:.82rem;font-weight:600}
 .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:18px}
 .detail-cell{background:var(--surface);padding:12px 16px}
 .detail-cell .dl{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
 .detail-cell .dv{font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:var(--main);font-weight:500}
-
 .winner-banner{background:var(--surf2);border:1px solid var(--line2);border-radius:var(--r);padding:11px 16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.82rem;color:var(--body);margin-bottom:18px;letter-spacing:.06em}
 
-/* ── ADMIN ── */
-.admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+/* WAR PLAYER LISTS in modal */
+.war-players-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
+.war-player-side-label{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;font-weight:500}
+.war-player-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:.82rem}
+.war-player-row:last-child{border-bottom:none}
+.war-player-name{color:var(--main);font-weight:500}
+.war-player-stats{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--muted)}
+.war-player-rating{font-family:'IBM Plex Mono',monospace;font-size:.72rem}
+
+/* LOGIN MODAL */
+.login-modal-inner{max-width:480px}
+.login-code{font-family:'IBM Plex Mono',monospace;font-size:3rem;font-weight:600;color:var(--accent);letter-spacing:.2em;text-align:center;padding:20px 0;background:var(--surf2);border:1px solid var(--line2);border-radius:var(--r);margin:16px 0}
+.login-timer{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted);text-align:center;margin-top:8px}
+.login-instructions{font-size:.82rem;color:var(--body);line-height:1.7;margin:12px 0}
+.login-instructions code{font-family:'IBM Plex Mono',monospace;background:var(--surf3);padding:1px 5px;border-radius:2px;color:var(--accent)}
+
+/* ADMIN (Zwaqs only) */
+.admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
 .admin-overlay.open{display:flex}
-.admin-panel{background:var(--black);border:1px solid var(--accent);border-radius:var(--r);width:100%;max-width:800px;font-family:'IBM Plex Mono',monospace}
+.admin-panel{background:var(--black);border:1px solid var(--accent);border-radius:var(--r);width:100%;max-width:900px;font-family:'IBM Plex Mono',monospace}
 .admin-head{padding:15px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
 .admin-title{font-size:.85rem;font-weight:600;color:var(--accent);letter-spacing:.1em;text-transform:uppercase}
-.admin-close{background:none;border:1px solid var(--line2);color:var(--dim);width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:3px;cursor:pointer;font-size:.88rem;transition:color .12s}
+.admin-close{background:none;border:1px solid var(--line2);color:var(--dim);width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:3px;cursor:pointer;font-size:.88rem}
 .admin-close:hover{color:var(--white)}
-.admin-body{padding:20px}
-.admin-section{margin-bottom:20px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.admin-body{padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.admin-section{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .admin-section-head{background:var(--surface);padding:9px 14px;font-size:.67rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--body);border-bottom:1px solid var(--line)}
 .admin-section-body{padding:14px}
 .admin-row{display:flex;gap:8px;margin-bottom:9px;flex-wrap:wrap}
@@ -233,38 +226,32 @@ td.atk{color:var(--red2);font-weight:600} td.def{color:var(--green2);font-weight
 .admin-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
 .admin-btn.danger{border-color:rgba(232,96,96,.35);color:var(--red2)}
 .admin-btn.danger:hover{background:var(--red);border-color:var(--red);color:#fff}
-.admin-log{background:var(--surf2);border:1px solid var(--line2);border-radius:var(--r);padding:11px;font-size:.7rem;color:var(--body);max-height:160px;overflow-y:auto;white-space:pre-wrap;line-height:1.65;margin-top:8px}
+.admin-log{background:var(--surf2);border:1px solid var(--line2);border-radius:var(--r);padding:10px;font-size:.7rem;color:var(--body);max-height:180px;overflow-y:auto;white-space:pre-wrap;line-height:1.65;margin-top:12px;grid-column:1/-1}
 .admin-log .ok{color:var(--green2)} .admin-log .err{color:var(--red2)} .admin-log .info{color:var(--accent)}
-.admin-wars-list{max-height:200px;overflow-y:auto}
-.admin-war-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:.75rem;gap:8px}
-.admin-war-row:last-child{border-bottom:none}
+.alliance-group{background:var(--surf2);border:1px solid var(--line2);border-radius:var(--r);padding:10px;margin-bottom:8px}
+.alliance-group-name{font-size:.78rem;font-weight:600;color:var(--white);margin-bottom:6px}
+.alliance-nation-tag{display:inline-flex;align-items:center;gap:4px;background:var(--surf3);border:1px solid var(--line2);border-radius:2px;padding:2px 7px;font-size:.7rem;color:var(--main);margin:2px}
+.alliance-nation-tag button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.75rem;padding:0}
+.alliance-nation-tag button:hover{color:var(--red)}
 
-/* ── STATES ── */
+/* STATE */
 .state-box{padding:44px 20px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--muted);letter-spacing:.06em}
-.state-box.error{color:var(--red2)}
 .loading-row{padding:24px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:.08em;animation:fade 1.2s ease-in-out infinite alternate}
 @keyframes fade{from{opacity:.35}to{opacity:1}}
 .spin{display:inline-block;width:11px;height:11px;border:1px solid var(--muted);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-right:7px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
-.inline-link{color:var(--accent);cursor:pointer}
-.inline-link:hover{text-decoration:underline}
-
-@media(max-width:720px){
-  .home-cols,.tools-grid,.score-split,.detail-grid{grid-template-columns:1fr}
-  .score-center{flex-direction:row;flex-wrap:wrap;justify-content:center}
-}
+.inline-link{color:var(--accent);cursor:pointer} .inline-link:hover{text-decoration:underline}
+@media(max-width:720px){.home-cols,.tools-grid,.score-split,.detail-grid,.war-players-split,.admin-body{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- ── HEADER ── -->
 <header>
   <div class="brand">RulerCraft <em>War</em> Tracker</div>
   <nav>
     <a onclick="showPage('home')"    id="nav-home"    class="active">Home</a>
     <a onclick="showPage('wars')"    id="nav-wars">Wars</a>
     <a onclick="showPage('tools')"   id="nav-tools">Tools</a>
-    <a onclick="showPage('players')" id="nav-players">Players</a>
     <a onclick="showPage('ranking')" id="nav-ranking">Ranking</a>
   </nav>
   <div class="header-right">
@@ -272,21 +259,16 @@ td.atk{color:var(--red2);font-weight:600} td.def{color:var(--green2);font-weight
       <span id="last-update-label">Loading...</span>
       <span id="next-fetch-label" style="color:var(--muted);font-size:.6rem"></span>
     </div>
-    <div class="live-pill" id="live-pill">
-      <div class="live-dot"></div><span id="live-count">0 LIVE</span>
-    </div>
+    <div class="live-pill" id="live-pill"><div class="live-dot"></div><span id="live-count">0 LIVE</span></div>
+    <button class="login-btn" id="login-btn" onclick="openLogin()">Login</button>
   </div>
 </header>
 
 <main>
 
-<!-- ═══ HOME ═══ -->
-<div id="pg-home" class="page active">
-<div class="wrap">
-  <div class="home-kpi">
-    <div class="kpi-label">Active Wars</div>
-    <div class="kpi-value accent" id="kpi-active">—</div>
-  </div>
+<!-- HOME -->
+<div id="pg-home" class="page active"><div class="wrap">
+  <div class="home-kpi"><div class="kpi-label">Active Wars</div><div class="kpi-value accent" id="kpi-active">—</div></div>
   <div id="home-alert" style="display:none" class="alert-bar">
     <strong id="home-alert-text"></strong>&nbsp;—&nbsp;<a onclick="showPage('wars')">View all wars →</a>
   </div>
@@ -300,35 +282,26 @@ td.atk{color:var(--red2);font-weight:600} td.def{color:var(--green2);font-weight
       <div id="home-past-list"><div class="loading-row"><span class="spin"></span>Loading...</div></div>
     </div>
   </div>
-</div>
-</div>
+</div></div>
 
-<!-- ═══ WARS ═══ -->
-<div id="pg-wars" class="page">
-<div class="wrap">
+<!-- WARS -->
+<div id="pg-wars" class="page"><div class="wrap">
   <div class="wars-section">
     <div class="section-label">Ongoing Wars <span id="wars-live-count">—</span></div>
     <div id="wars-ongoing-table"><div class="loading-row"><span class="spin"></span>Loading...</div></div>
   </div>
   <div class="wars-section">
-    <div class="section-label">Past Wars <span style="font-size:.6rem;color:var(--muted)">(last 3 days)</span> <span id="wars-past-count">—</span></div>
+    <div class="section-label">Past Wars <span style="font-size:.6rem;color:var(--muted)">(last 3 days)</span><span id="wars-past-count">—</span></div>
     <div id="wars-past-table"><div class="loading-row"><span class="spin"></span>Loading...</div></div>
   </div>
-</div>
-</div>
+</div></div>
 
-<!-- ═══ TOOLS ═══ -->
-<div id="pg-tools" class="page">
-<div class="wrap">
+<!-- TOOLS -->
+<div id="pg-tools" class="page"><div class="wrap">
   <div class="section-label" style="margin-bottom:22px">Tools</div>
   <div class="tools-grid">
-
-    <!-- NOTIFICATIONS -->
     <div class="tool-card">
-      <div class="tool-head">
-        <div class="tool-title">⚔ War Notifications</div>
-        <div class="tool-desc">Get notified whenever a watched nation starts or ends a war — even with the tab closed.</div>
-      </div>
+      <div class="tool-head"><div class="tool-title">⚔ War Notifications</div><div class="tool-desc">Get notified whenever a watched nation starts or ends a war — even with the tab closed.</div></div>
       <div class="tool-body">
         <label class="field-label">Watched Nations</label>
         <div class="notif-nations-wrap" id="notif-tags"></div>
@@ -337,17 +310,11 @@ td.atk{color:var(--red2);font-weight:600} td.def{color:var(--green2);font-weight
           <div class="autocomplete-list" id="notif-nation-ac"></div>
         </div>
         <div class="notif-status" id="notif-status"></div>
-        <!-- OneSignal subscription widget -->
         <div class="onesignal-customlink-container"></div>
       </div>
     </div>
-
-    <!-- TRAVEL PLANNER -->
     <div class="tool-card">
-      <div class="tool-head">
-        <div class="tool-title">🧭 Travel Planner</div>
-        <div class="tool-desc">Find the closest town with a public teleport spawn to any war or town.</div>
-      </div>
+      <div class="tool-head"><div class="tool-title">🧭 Travel Planner</div><div class="tool-desc">Find the closest town with a public teleport spawn to any war or town.</div></div>
       <div class="tool-body">
         <label class="field-label">War or Town</label>
         <div class="autocomplete-wrap">
@@ -356,9 +323,7 @@ td.atk{color:var(--red2);font-weight:600} td.def{color:var(--green2);font-weight
         </div>
         <button class="btn" id="travel-btn" onclick="runTravel()" disabled>Find Closest Spawn</button>
         <div class="result-box" id="travel-result">
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">
-            Result <span id="travel-idx"></span>
-          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Result <span id="travel-idx"></span></div>
           <div class="result-row"><span class="result-label">Town</span><span class="result-val" id="tr-town">—</span></div>
           <div class="result-row"><span class="result-label">Nation</span><span class="result-val" id="tr-nation">—</span></div>
           <div class="result-row"><span class="result-label">Distance</span><span class="result-val" id="tr-dist">—</span></div>
@@ -369,74 +334,84 @@ td.atk{color:var(--red2);font-weight:600} td.def{color:var(--green2);font-weight
         </div>
       </div>
     </div>
-
   </div>
-</div>
-</div>
+</div></div>
 
-<!-- ═══ PLAYERS ═══ -->
-<div id="pg-players" class="page">
-<div class="wrap">
-  <div class="coming-soon">
-    <div class="cs-badge">In Development</div>
-    <div class="cs-title">Players</div>
-    <div class="cs-sub">Player kill/death tracking and leaderboards coming once player data is available.</div>
+<!-- RANKING -->
+<div id="pg-ranking" class="page"><div class="wrap">
+  <div class="lb-tabs">
+    <button class="lb-tab active" onclick="setLbTab('players',this)">Players</button>
+    <button class="lb-tab" onclick="setLbTab('nations',this)">Nations</button>
   </div>
-</div>
-</div>
-
-<!-- ═══ RANKING ═══ -->
-<div id="pg-ranking" class="page">
-<div class="wrap">
-  <div class="coming-soon">
-    <div class="cs-badge">In Development</div>
-    <div class="cs-title">Rankings</div>
-    <div class="cs-sub">Nation and season leaderboards are being built. Check back soon.</div>
-  </div>
-</div>
-</div>
+  <div class="panel" id="lb-content"><div class="loading-row"><span class="spin"></span>Loading ratings...</div></div>
+</div></div>
 
 </main>
 
-<!-- ══ WAR MODAL ══ -->
-<div class="overlay" id="o-war" onclick="closeOut(event,'o-war')">
-  <div class="modal" id="m-war"></div>
+<!-- WAR MODAL -->
+<div class="overlay" id="o-war" onclick="closeOut(event,'o-war')"><div class="modal" id="m-war"></div></div>
+
+<!-- LOGIN MODAL -->
+<div class="overlay" id="o-login" onclick="closeOut(event,'o-login')">
+  <div class="modal login-modal-inner" id="m-login">
+    <button class="modal-close" onclick="closeOverlay('o-login')">✕</button>
+    <div style="padding:24px">
+      <div class="wm-town" style="margin-bottom:4px">Login to RulerCraft War Tracker</div>
+      <div id="login-content"><div class="loading-row"><span class="spin"></span>Generating code...</div></div>
+    </div>
+  </div>
 </div>
 
-<!-- ══ ADMIN ══ -->
+<!-- ADMIN (Zwaqs only, Ctrl+Shift+A) -->
 <div class="admin-overlay" id="admin-overlay" onclick="closeOut(event,'admin-overlay')">
   <div class="admin-panel">
     <div class="admin-head">
-      <div class="admin-title">⚙ Admin Panel</div>
+      <div class="admin-title">⚙ Admin Panel — Zwaqs</div>
       <button class="admin-close" onclick="closeOverlay('admin-overlay')">✕</button>
     </div>
     <div class="admin-body">
       <div class="admin-section">
-        <div class="admin-section-head">Data</div>
+        <div class="admin-section-head">Data & Wars</div>
         <div class="admin-section-body">
           <div class="admin-row">
-            <button class="admin-btn" onclick="adminForceRefresh()">Force Refresh</button>
-            <button class="admin-btn" onclick="adminDiag()">Log Diagnostics</button>
-            <button class="admin-btn danger" onclick="adminClearPastWars()">Clear Past Wars</button>
-          </div>
-          <div style="font-size:.65rem;color:var(--muted);margin-bottom:7px">Inject a fake live war for testing:</div>
-          <div class="admin-row">
-            <input class="admin-input" id="admin-inject-town" placeholder="Town">
-            <input class="admin-input" id="admin-inject-atk" placeholder="Attacker">
-            <input class="admin-input" id="admin-inject-def" placeholder="Defender">
-            <button class="admin-btn" onclick="adminInjectWar()">Inject</button>
+            <button class="admin-btn" onclick="adminRefresh()">Force Refresh</button>
+            <button class="admin-btn" onclick="adminDiag()">Diagnostics</button>
+            <button class="admin-btn danger" onclick="adminClearPast()">Clear Past Wars</button>
           </div>
           <div class="admin-row">
-            <button class="admin-btn danger" onclick="adminClearInjected()">Remove Injected Wars</button>
+            <input class="admin-input" id="ai-town" placeholder="Town"><input class="admin-input" id="ai-atk" placeholder="Attacker"><input class="admin-input" id="ai-def" placeholder="Defender">
+            <button class="admin-btn" onclick="adminInject()">Inject War</button>
+          </div>
+          <div class="admin-row"><button class="admin-btn danger" onclick="adminClearInjected()">Remove Injected</button></div>
+          <div style="font-size:.65rem;color:var(--muted);margin-top:8px">Stored past wars:</div>
+          <div id="admin-wars-list" style="max-height:160px;overflow-y:auto;margin-top:6px"></div>
+        </div>
+      </div>
+      <div class="admin-section">
+        <div class="admin-section-head">Nation Alliances</div>
+        <div class="admin-section-body">
+          <div style="font-size:.72rem;color:var(--body);margin-bottom:10px;line-height:1.6">Group allied nations together. War team resolution uses these groups to determine which side a player is on.</div>
+          <div id="alliance-groups"></div>
+          <div class="admin-row" style="margin-top:8px">
+            <button class="admin-btn" onclick="adminAddAllianceGroup()">+ New Alliance Group</button>
+            <button class="admin-btn" onclick="adminSaveAlliances()">Save Alliances</button>
           </div>
         </div>
       </div>
       <div class="admin-section">
-        <div class="admin-section-head">Past Wars on Server</div>
+        <div class="admin-section-head">Ratings</div>
         <div class="admin-section-body">
-          <div class="admin-wars-list" id="admin-wars-list">
-            <div style="color:var(--muted);font-size:.72rem">No past wars stored.</div>
+          <div class="admin-row">
+            <button class="admin-btn danger" onclick="adminClearRatings()">Reset All Ratings</button>
+            <button class="admin-btn" onclick="adminRecomputeRatings()">Recompute Last War</button>
           </div>
+          <div id="admin-ratings-summary" style="font-size:.7rem;color:var(--muted);margin-top:8px"></div>
+        </div>
+      </div>
+      <div class="admin-section">
+        <div class="admin-section-head">Users & Sessions</div>
+        <div class="admin-section-body">
+          <div id="admin-users-list" style="font-size:.72rem;color:var(--body);max-height:120px;overflow-y:auto"></div>
         </div>
       </div>
       <div class="admin-log" id="admin-log">// Admin log
@@ -446,401 +421,214 @@ td.atk{color:var(--red2);font-weight:600} td.def{color:var(--green2);font-weight
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════════
-const PAST_WAR_TTL = 3 * 24 * 60 * 60 * 1000;
-const REFRESH_MS   = 60_000;
+// ═══ STATE ═══════════════════════════════════════════════════════════════════
+const PAST_WAR_TTL = 3*24*60*60*1000, REFRESH_MS = 60000;
+let liveWars=[], pastWars=[], rawMarkers=null, ratingsData={players:{},nations:{}};
+let alliances={groups:[]}, warEvents={};
+let lastUpdate=null, fetchTimer=null, cntDown=60, cntInterval=null;
+let injectedWars=[], prevLiveIds=new Set();
+let notifNations=[], travelSelected=null, travelResults=[], travelIdx=0;
+let lbTab='players', lbSort='rating', lbDir=-1;
+let sessionToken=localStorage.getItem('rc_token')||'';
+let loggedInAs=localStorage.getItem('rc_user')||'';
+let loginPollTimer=null, loginSessionId=null;
 
-let liveWars     = [];
-let pastWars     = [];
-let rawMarkers   = null;
-let lastUpdate   = null;
-let fetchTimer   = null;
-let cntDown      = REFRESH_MS / 1000;
-let cntInterval  = null;
-let injectedWars = [];
-
-// Track which IDs were live last cycle so we can detect endings
-let prevLiveIds = new Set();
-
-// Notification nations
-let notifNations = [];
-
-// Travel
-let travelSelected = null;
-let travelResults  = [];
-let travelIdx      = 0;
-
-// ═══════════════════════════════════════════════════════════
-// FETCH
-// ═══════════════════════════════════════════════════════════
-async function fetchData(force = false) {
-  try {
-    document.getElementById('last-update-label').textContent = 'Updating...';
-    const url = '/api/markers' + (force ? '?force=1' : '');
-    const [markersResp, pastResp] = await Promise.all([
-      fetch(url).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
-      fetch('/api/past-wars').then(r => r.json()).catch(() => [])
+// ═══ FETCH ═══════════════════════════════════════════════════════════════════
+async function fetchData(force=false){
+  try{
+    document.getElementById('last-update-label').textContent='Updating...';
+    const hdrs={'Content-Type':'application/json'};
+    if(sessionToken) hdrs['X-Session-Token']=sessionToken;
+    const [mR,pR,rtR]=await Promise.all([
+      fetch('/api/markers'+(force?'?force=1':'')).then(r=>r.json()),
+      fetch('/api/past-wars').then(r=>r.json()).catch(()=>[]),
+      fetch('/api/ratings').then(r=>r.json()).catch(()=>({players:{},nations:{}}))
     ]);
-
-    rawMarkers = markersResp;
-    const freshLive = parseSiegeMarkers(rawMarkers);
-    const freshIds  = new Set(freshLive.map(w => w.id));
-
-    // Detect wars that just ended (were live, now gone from API)
-    for (const id of prevLiveIds) {
-      if (!freshIds.has(id)) {
-        // Find the last known data for this war
-        const prev = liveWars.find(w => w.id === id);
-        if (prev && !prev._injected) {
-          const winner  = calcWinner(prev);
-          const endedWar = { ...prev, isOngoing: false, winner, endedAt: Date.now() };
-          console.log('[WAR ENDED]', prev.town, '→ winner:', winner);
-          // Save to server
-          fetch('/api/past-wars', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(endedWar)
-          }).catch(e => console.error('[save past war]', e));
+    rawMarkers=mR; ratingsData=rtR||{players:{},nations:{}};
+    const fresh=parseSiegeMarkers(rawMarkers);
+    const freshIds=new Set(fresh.map(w=>w.id));
+    for(const id of prevLiveIds){
+      if(!freshIds.has(id)){
+        const prev=liveWars.find(w=>w.id===id);
+        if(prev&&!prev._injected){
+          const{atkFinal,defFinal}=calcPoints(prev);
+          const winner=atkFinal>=defFinal?'attacker':'defender';
+          fetch('/api/past-wars',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...prev,isOngoing:false,winner,endedAt:Date.now()})}).catch(()=>{});
         }
       }
     }
-    prevLiveIds = freshIds;
-
-    liveWars = [...freshLive, ...injectedWars];
-    pastWars = pastResp.filter(w => Date.now() - w.endedAt < PAST_WAR_TTL);
-    lastUpdate = new Date();
-    document.getElementById('last-update-label').textContent = 'Updated ' + fmtTime(lastUpdate);
+    prevLiveIds=freshIds;
+    liveWars=[...fresh,...injectedWars];
+    pastWars=(pR||[]).filter(w=>Date.now()-w.endedAt<PAST_WAR_TTL);
+    lastUpdate=new Date();
+    document.getElementById('last-update-label').textContent='Updated '+fmtTime(lastUpdate);
     renderAll();
-  } catch(e) {
-    console.error('[fetch]', e);
-    document.getElementById('last-update-label').textContent = 'Error: ' + e.message;
+  }catch(e){
+    document.getElementById('last-update-label').textContent='Error: '+e.message;
   }
   scheduleNext();
 }
 
-// Determine winner accounting for siege balance
-function calcWinner(w) {
-  const { atkFinal, defFinal } = calcPoints(w);
-  return atkFinal >= defFinal ? 'attacker' : 'defender';
+function scheduleNext(){
+  clearTimeout(fetchTimer); clearInterval(cntInterval); cntDown=60;
+  const el=document.getElementById('next-fetch-label');
+  const tick=()=>{cntDown=Math.max(0,cntDown-1);el.textContent='next: '+cntDown+'s';};
+  tick(); cntInterval=setInterval(tick,1000);
+  fetchTimer=setTimeout(()=>fetchData(),REFRESH_MS);
+  const now=new Date(), msTo=(60-now.getMinutes())*60000-now.getSeconds()*1000-now.getMilliseconds(), pre=msTo-5000;
+  if(pre>500) setTimeout(()=>{fetchData(true);setTimeout(()=>fetchData(true),5000);},pre);
+  else if(msTo>0) setTimeout(()=>fetchData(true),msTo);
 }
 
-function scheduleNext() {
-  clearTimeout(fetchTimer);
-  clearInterval(cntInterval);
-  cntDown = REFRESH_MS / 1000;
-  const el = document.getElementById('next-fetch-label');
-  const tick = () => { cntDown = Math.max(0, cntDown - 1); el.textContent = 'next: ' + cntDown + 's'; };
-  tick();
-  cntInterval = setInterval(tick, 1000);
-  fetchTimer  = setTimeout(() => fetchData(), REFRESH_MS);
-  // Hourly boundary fetches
-  const now = new Date();
-  const msTo = (60 - now.getMinutes()) * 60000 - now.getSeconds() * 1000 - now.getMilliseconds();
-  const pre  = msTo - 5000;
-  if (pre > 500) setTimeout(() => { fetchData(true); setTimeout(() => fetchData(true), 5000); }, pre);
-  else if (msTo > 0) setTimeout(() => fetchData(true), msTo);
+// ═══ PARSE ═══════════════════════════════════════════════════════════════════
+function parseDesc(desc){
+  const plain=desc.replace(/<b[^>]*>(.*?)<\/b>/gi,'$1').replace(/<br\s*\/?>/gi,'\n')
+    .replace(/<[^>]+>/g,'').replace(/&#43;/g,'').replace(/&#8722;/g,'-')
+    .replace(/&amp;/g,'&').replace(/&#\d+;/g,'');
+  const get=k=>{const m=plain.match(new RegExp(k+':\\s*([^\\n]+)','i'));return m?m[1].trim():null;};
+  const sm=plain.match(/Siege:\s*(.+?)\s+vs\s+(.+)/i);
+  const attacker=sm?sm[1].trim():'?', defender=sm?sm[2].trim():'?';
+  const town=(get('Town')||'?').split(/\s/)[0].replace(/_/g,' ');
+  const siegeStatus=get('Siege Status')||'';
+  const pr=(get('Siege Progress')||'0/3').match(/(\d+)\s*\/\s*(\d+)/);
+  let session=pr?parseInt(pr[1]):0; const sessMax=pr?parseInt(pr[2]):3;
+  if(/contested/i.test(siegeStatus)) session++;
+  const br=get('Banner Control')||'';
+  let bannerCtrl='Contested',bannerCount=0;
+  if(/attacker/i.test(br)){bannerCtrl='Attackers';const bm=br.match(/\((\d+)\)/);bannerCount=bm?parseInt(bm[1]):0;}
+  else if(/defender/i.test(br)){bannerCtrl='Defenders';const bm=br.match(/\((\d+)\)/);bannerCount=bm?parseInt(bm[1]):0;}
+  const pts=(get('Battle Points')||'0 / 0').match(/([\d,]+)\s*\/\s*([\d,]+)/);
+  const atkPts=pts?parseInt(pts[1].replace(/,/g,'')):0, defPts=pts?parseInt(pts[2].replace(/,/g,'')):0;
+  const siegeBalance=parseInt(get('Siege Balance')||'0')||0;
+  return{attacker,defender,town,siegeStatus,siegeType:get('Type')||'Conquest',session,sessMax,bannerCtrl,bannerCount,atkPts,defPts,siegeBalance,timeLeft:get('Battle Time Left')};
 }
 
-// ═══════════════════════════════════════════════════════════
-// PARSING — DESC
-// ═══════════════════════════════════════════════════════════
-function parseDesc(desc) {
-  const plain = desc
-    .replace(/<b[^>]*>(.*?)<\/b>/gi, '$1')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<[^>]+>/g, '')
-    .replace(/&#43;/g,  '')
-    .replace(/&#8722;/g, '-')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&#\d+;/g, '');
-
-  const get = k => {
-    const m = plain.match(new RegExp(k + ':\\s*([^\\n]+)', 'i'));
-    return m ? m[1].trim() : null;
-  };
-
-  // Attacker / Defender from bold title "Siege: X vs Y"
-  const sm = plain.match(/Siege:\s*(.+?)\s+vs\s+(.+)/i);
-  const attacker = sm ? sm[1].trim() : '?';
-  const defender = sm ? sm[2].trim() : '?';
-
-  // Town — stop at first whitespace or newline; replace underscores
-  const rawTown = get('Town') || '?';
-  // The raw value might be "Roman_EmpireTown: ..." if the <br> became \n
-  // So take only the first word and replace underscores
-  const town = rawTown.split(/\s/)[0].replace(/_/g, ' ');
-
-  const siegeStatus = get('Siege Status') || '';
-  const siegeType   = get('Type') || 'Conquest';
-  const siegeBalance = parseInt(get('Siege Balance') || '0') || 0;
-
-  // Session
-  const pr = (get('Siege Progress') || '0/3').match(/(\d+)\s*\/\s*(\d+)/);
-  let session   = pr ? parseInt(pr[1]) : 0;
-  const sessMax = pr ? parseInt(pr[2]) : 3;
-  if (/contested/i.test(siegeStatus)) session++;
-
-  // Banner control
-  const br = get('Banner Control') || '';
-  let bannerCtrl = 'Contested', bannerCount = 0;
-  if      (/attacker/i.test(br)) { bannerCtrl = 'Attackers'; const bm = br.match(/\((\d+)\)/); bannerCount = bm ? parseInt(bm[1]) : 0; }
-  else if (/defender/i.test(br)) { bannerCtrl = 'Defenders'; const bm = br.match(/\((\d+)\)/); bannerCount = bm ? parseInt(bm[1]) : 0; }
-
-  // Battle Points — raw may have leading +/- from &#43;/&#8722; already stripped
-  const ptsRaw = get('Battle Points') || '0 / 0';
-  const pts    = ptsRaw.match(/([-\d,]+)\s*\/\s*([-\d,]+)/);
-  const atkPts = pts ? parseInt(pts[1].replace(/,/g, '')) : 0;
-  const defPts = pts ? parseInt(pts[2].replace(/,/g, '')) : 0;
-
-  return {
-    attacker, defender, town, siegeStatus, siegeType, session, sessMax,
-    bannerCtrl, bannerCount, atkPts, defPts, siegeBalance,
-    timeLeft: get('Battle Time Left')
-  };
+function parseSiegeMarkers(json){
+  if(!json) return [];
+  const markers=json?.sets?.['siegewar.markerset']?.markers||{};
+  return Object.entries(markers).filter(([,m])=>m.desc&&m.desc.includes('Siege:')).map(([id,m])=>({id,x:m.x,z:m.z,isOngoing:true,...parseDesc(m.desc)}));
 }
 
-function parseSiegeMarkers(json) {
-  if (!json) return [];
-  const markers = json?.sets?.['siegewar.markerset']?.markers || {};
-  const wars = [];
-  for (const [id, m] of Object.entries(markers)) {
-    // Filter: must have a desc containing "Siege:" — icon name varies (fire, siegewar.battle, etc.)
-    if (!m.desc || !m.desc.includes('Siege:')) continue;
-    const parsed = parseDesc(m.desc);
-    wars.push({ id, x: m.x, z: m.z, isOngoing: true, ...parsed });
-  }
-  return wars;
+function parseTownMarkers(json){
+  if(!json) return [];
+  const markers=json?.sets?.['towny.markerset']?.markers||{};
+  return Object.entries(markers).filter(([,m])=>{
+    const ic=(m.icon||'').toLowerCase();
+    return m.label&&m.desc&&ic!=='outpost'&&(ic==='fortress'||ic==='town'||ic==='ruler');
+  }).map(([id,m])=>{
+    const plain=m.desc.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ');
+    const tp=plain.match(/Public Teleport\s*[:\s]+(\w+)/i);
+    const tpEnabled=tp?tp[1].toLowerCase()==='enabled':false;
+    const wm=[...m.desc.matchAll(/fandom\.com\/wiki\/([^"\/]+)"/g)];
+    const nation=wm.length>=2?decodeURIComponent(wm[1][1]).replace(/_/g,' '):(wm.length===1?decodeURIComponent(wm[0][1]).replace(/_/g,' '):'');
+    return{id,name:m.label,nation,tpEnabled,x:m.x,z:m.z};
+  });
 }
 
-// ═══════════════════════════════════════════════════════════
-// POINTS WITH SIEGE BALANCE
-// Siege balance: positive = attacker advantage, negative = defender advantage
-// Final ATK = atkPts + max(0, siegeBalance)
-// Final DEF = defPts + max(0, -siegeBalance)
-// ═══════════════════════════════════════════════════════════
-function calcPoints(w) {
-  const sb = w.siegeBalance || 0;
-  const atkBonus = sb > 0 ? sb : 0;
-  const defBonus = sb < 0 ? -sb : 0;
-  return {
-    atkFinal: (w.atkPts || 0) + atkBonus,
-    defFinal: (w.defPts || 0) + defBonus
-  };
+function getNations(json){
+  const seen=new Set();
+  for(const t of parseTownMarkers(json)) if(t.nation) seen.add(t.nation);
+  return [...seen].sort((a,b)=>a.localeCompare(b));
 }
 
-// ═══════════════════════════════════════════════════════════
-// PARSING — TOWNS  (towny.markerset → markers)
-// ═══════════════════════════════════════════════════════════
-function parseTownMarkers(json) {
-  if (!json) return [];
-  const markers = json?.sets?.['towny.markerset']?.markers || {};
-  const towns = [];
-
-  for (const [id, m] of Object.entries(markers)) {
-    if (!m.label || !m.desc) continue;
-    // Accept fortress, town, ruler — exclude outpost
-    const icon = (m.icon || '').toLowerCase();
-    if (icon === 'outpost') continue;
-    if (icon !== 'fortress' && icon !== 'town' && icon !== 'ruler') continue;
-
-    const desc  = m.desc;
-    // Strip all HTML tags for plain text search
-    const plain = desc.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
-
-    // Public Teleport check on plain text
-    const tpMatch  = plain.match(/Public Teleport\s*[:\s]+(\w+)/i);
-    const tpEnabled = tpMatch ? tpMatch[1].toLowerCase() === 'enabled' : false;
-
-    // Nation: second fandom wiki link
-    // href="https://rulercraft.fandom.com/wiki/NATION_NAME"
-    const wikiMatches = [...desc.matchAll(/fandom\.com\/wiki\/([^"\/]+)"/g)];
-    const nation = wikiMatches.length >= 2
-      ? decodeURIComponent(wikiMatches[1][1]).replace(/_/g, ' ')
-      : (wikiMatches.length === 1 ? decodeURIComponent(wikiMatches[0][1]).replace(/_/g, ' ') : '');
-
-    towns.push({ id, name: m.label, nation, tpEnabled, x: m.x, z: m.z });
-  }
-  return towns;
+function calcPoints(w){
+  const sb=w.siegeBalance||0;
+  return{atkFinal:(w.atkPts||0)+Math.max(0,sb),defFinal:(w.defPts||0)+Math.max(0,-sb)};
 }
 
-function getNations(json) {
-  const seen = new Set();
-  for (const t of parseTownMarkers(json)) {
-    if (t.nation) seen.add(t.nation);
-  }
-  return [...seen].sort((a, b) => a.localeCompare(b));
+// ═══ RENDER ══════════════════════════════════════════════════════════════════
+function renderAll(){ renderHeader(); renderHome(); renderWarsPage(); }
+
+function renderHeader(){
+  const pill=document.getElementById('live-pill');
+  if(liveWars.length>0){pill.style.display='flex';document.getElementById('live-count').textContent=liveWars.length+' LIVE';}
+  else pill.style.display='none';
+  const btn=document.getElementById('login-btn');
+  if(loggedInAs){btn.textContent='● '+loggedInAs;btn.className='login-btn logged-in';}
+  else{btn.textContent='Login';btn.className='login-btn';}
 }
 
-// ═══════════════════════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════════════════════
-function renderAll() {
-  renderHeader();
-  renderHome();
-  renderWarsPage();
-  adminRenderPastWars();
+function renderHome(){
+  document.getElementById('kpi-active').textContent=liveWars.length;
+  const alertEl=document.getElementById('home-alert');
+  if(liveWars.length>0){alertEl.style.display='flex';document.getElementById('home-alert-text').textContent=liveWars.length+' active war'+(liveWars.length>1?'s':'')+' in progress';}
+  else alertEl.style.display='none';
+  const activeEl=document.getElementById('home-active-list');
+  if(!liveWars.length){activeEl.innerHTML='<div class="state-box">No active wars right now.</div>';}
+  else activeEl.innerHTML=liveWars.map(w=>{const{atkFinal,defFinal}=calcPoints(w);return`<div class="list-row" onclick="openWarModal('${esc(w.id)}')"><div><div class="row-main">${esc(w.town)}</div><div class="row-sub">${esc(w.attacker)} <span style="color:var(--muted)">vs</span> ${esc(w.defender)}</div></div><div class="row-right"><div class="tag tag-live">LIVE</div><div class="row-sub mono" style="margin-top:3px">${atkFinal.toLocaleString()} – ${defFinal.toLocaleString()}</div></div></div>`;}).join('');
+  const pastEl=document.getElementById('home-past-list');
+  const recent=[...pastWars].reverse().slice(0,6);
+  if(!recent.length){pastEl.innerHTML='<div class="state-box">No ended wars in the last 3 days.</div>';}
+  else pastEl.innerHTML=recent.map(w=>`<div class="list-row" onclick="openWarModal('${esc(w.id)}')"><div><div class="row-main">${esc(w.town)}</div><div class="row-sub">${esc(w.attacker)} vs ${esc(w.defender)}</div></div><div class="row-right">${winnerTag(w)}<div class="row-sub mono" style="margin-top:3px">${timeAgo(w.endedAt)}</div></div></div>`).join('');
 }
 
-function renderHeader() {
-  const pill = document.getElementById('live-pill');
-  if (liveWars.length > 0) {
-    pill.style.display = 'flex';
-    document.getElementById('live-count').textContent = liveWars.length + ' LIVE';
-  } else {
-    pill.style.display = 'none';
-  }
+function renderWarsPage(){
+  document.getElementById('wars-live-count').textContent=liveWars.length+' active';
+  const onEl=document.getElementById('wars-ongoing-table');
+  if(!liveWars.length){onEl.innerHTML='<div class="state-box">No wars currently in progress.</div>';}
+  else onEl.innerHTML=`<table><thead><tr><th>Town</th><th>Attacker</th><th>Defender</th><th>Session</th><th>Points (ATK / DEF)</th><th>Banner</th><th>Time Left</th><th></th></tr></thead><tbody>`+liveWars.map(w=>{const{atkFinal,defFinal}=calcPoints(w);return`<tr onclick="openWarModal('${esc(w.id)}')"><td class="town">${esc(w.town)}</td><td class="atk">${esc(w.attacker)}</td><td class="def">${esc(w.defender)}</td><td class="mono muted">S-${w.session}</td><td>${ptsCell(atkFinal,defFinal)}</td><td class="mono" style="color:var(--body);font-size:.78rem">${bannerText(w)}</td><td class="war-timer">${w.timeLeft&&w.timeLeft!=='N/A'?esc(w.timeLeft):'—'}</td><td><span class="tag tag-live">LIVE</span></td></tr>`;}).join('')+'</tbody></table>';
+  const recent=[...pastWars].reverse();
+  document.getElementById('wars-past-count').textContent=recent.length+' recorded';
+  const pastEl=document.getElementById('wars-past-table');
+  if(!recent.length){pastEl.innerHTML='<div class="state-box">No ended wars in the past 3 days.</div>';}
+  else pastEl.innerHTML=`<table><thead><tr><th>Town</th><th>Attacker</th><th>Defender</th><th>Session</th><th>Final Score (ATK / DEF)</th><th>Ended</th><th>Result</th></tr></thead><tbody>`+recent.map(w=>{const{atkFinal,defFinal}=calcPoints(w);return`<tr onclick="openWarModal('${esc(w.id)}')"><td class="town">${esc(w.town)}</td><td class="atk">${esc(w.attacker)}</td><td class="def">${esc(w.defender)}</td><td class="mono muted">S-${w.session}</td><td>${ptsCell(atkFinal,defFinal)}</td><td class="mono muted">${timeAgo(w.endedAt)}</td><td>${winnerTag(w)}</td></tr>`;}).join('')+'</tbody></table>';
 }
 
-function renderHome() {
-  document.getElementById('kpi-active').textContent = liveWars.length;
-  const alertEl = document.getElementById('home-alert');
-  if (liveWars.length > 0) {
-    alertEl.style.display = 'flex';
-    document.getElementById('home-alert-text').textContent =
-      liveWars.length + ' active war' + (liveWars.length > 1 ? 's' : '') + ' in progress';
-  } else {
-    alertEl.style.display = 'none';
-  }
+// ═══ WAR MODAL ═══════════════════════════════════════════════════════════════
+async function openWarModal(id){
+  const w=[...liveWars,...pastWars].find(x=>x.id===id); if(!w) return;
+  const{atkFinal,defFinal}=calcPoints(w);
+  const tot=atkFinal+defFinal, aPct=tot?Math.round(atkFinal/tot*100):50;
+  const mapUrl=`https://map.rulercraft.com/?x=${Math.round(w.x||0)}&z=${Math.round(w.z||0)}&zoom=5`;
+  const sb=w.siegeBalance||0, sessMax=w.sessMax||3;
+  let bColor='var(--dim)';
+  if(w.isOngoing){if(w.bannerCtrl==='Attackers') bColor='var(--red2)';else if(w.bannerCtrl==='Defenders') bColor='var(--green2)';}
+  const sbColor=sb>0?'var(--red2)':sb<0?'var(--green2)':'var(--dim)';
+  const sbLabel=sb>0?`+${sb} (Atk)`:sb<0?`${sb} (Def)`:'0';
 
-  const activeEl = document.getElementById('home-active-list');
-  if (!liveWars.length) {
-    activeEl.innerHTML = '<div class="state-box">No active wars right now.</div>';
-  } else {
-    activeEl.innerHTML = liveWars.map(w => {
-      const { atkFinal, defFinal } = calcPoints(w);
-      return `<div class="list-row" onclick="openWarModal('${esc(w.id)}')">
-        <div>
-          <div class="row-main">${esc(w.town)}</div>
-          <div class="row-sub">${esc(w.attacker)} <span style="color:var(--muted)">vs</span> ${esc(w.defender)}</div>
-        </div>
-        <div class="row-right">
-          <div class="tag tag-live">LIVE</div>
-          <div class="row-sub mono" style="margin-top:3px">${atkFinal.toLocaleString()} – ${defFinal.toLocaleString()}</div>
-        </div>
+  // Fetch war event data (players, kills, ratings)
+  let warPlayerHtml='';
+  try{
+    const [evR,rDeltaR]=await Promise.all([
+      fetch('/api/war-events/'+encodeURIComponent(id)).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch('/api/ratings/war/'+encodeURIComponent(id)).then(r=>r.ok?r.json():null).catch(()=>null)
+    ]);
+    if(evR&&evR.attendees&&Object.keys(evR.attendees).length>0){
+      const atks=[], defs=[];
+      for(const[name,info] of Object.entries(evR.attendees)){
+        const delta=rDeltaR?.playerDeltas?.[name];
+        const deltaStr=delta?`<span class="${delta.delta>0?'delta-pos':delta.delta<0?'delta-neg':'delta-zero'}">${delta.delta>0?'+':''}${delta.delta}</span>`:''
+        const row=`<div class="war-player-row"><span class="war-player-name">${esc(name)}</span><span class="war-player-stats">${info.kills||0}K / ${info.deaths||0}D &nbsp;${deltaStr}</span></div>`;
+        if(info.side==='attacker') atks.push(row); else if(info.side==='defender') defs.push(row);
+      }
+      warPlayerHtml=`<div class="war-players-split">
+        <div><div class="war-player-side-label" style="color:var(--red2)">Attackers (${atks.length})</div>${atks.join('')||'<div style="color:var(--muted);font-size:.78rem">None detected yet</div>'}</div>
+        <div><div class="war-player-side-label" style="color:var(--green2)">Defenders (${defs.length})</div>${defs.join('')||'<div style="color:var(--muted);font-size:.78rem">None detected yet</div>'}</div>
       </div>`;
-    }).join('');
-  }
+    }
+  }catch(e){}
 
-  const pastEl = document.getElementById('home-past-list');
-  const recent = [...pastWars].reverse().slice(0, 6);
-  if (!recent.length) {
-    pastEl.innerHTML = '<div class="state-box">No ended wars in the last 3 days.</div>';
-  } else {
-    pastEl.innerHTML = recent.map(w => `
-      <div class="list-row" onclick="openWarModal('${esc(w.id)}')">
-        <div>
-          <div class="row-main">${esc(w.town)}</div>
-          <div class="row-sub">${esc(w.attacker)} vs ${esc(w.defender)}</div>
-        </div>
-        <div class="row-right">
-          ${winnerTag(w)}
-          <div class="row-sub mono" style="margin-top:3px">${timeAgo(w.endedAt)}</div>
-        </div>
-      </div>`).join('');
-  }
-}
-
-function renderWarsPage() {
-  document.getElementById('wars-live-count').textContent = liveWars.length + ' active';
-  const onEl = document.getElementById('wars-ongoing-table');
-  if (!liveWars.length) {
-    onEl.innerHTML = '<div class="state-box">No wars currently in progress.</div>';
-  } else {
-    onEl.innerHTML = `<table><thead><tr>
-      <th>Town</th><th>Attacker</th><th>Defender</th><th>Session</th>
-      <th>Points (ATK / DEF)</th><th>Banner</th><th>Time Left</th><th></th>
-    </tr></thead><tbody>` +
-    liveWars.map(w => {
-      const { atkFinal, defFinal } = calcPoints(w);
-      return `<tr onclick="openWarModal('${esc(w.id)}')">
-        <td class="town">${esc(w.town)}</td>
-        <td class="atk">${esc(w.attacker)}</td>
-        <td class="def">${esc(w.defender)}</td>
-        <td class="mono muted">S-${w.session}</td>
-        <td>${ptsCell(atkFinal, defFinal)}</td>
-        <td class="mono" style="color:var(--body);font-size:.78rem">${bannerText(w)}</td>
-        <td class="war-timer">${w.timeLeft && w.timeLeft !== 'N/A' ? w.timeLeft : '—'}</td>
-        <td><span class="tag tag-live">LIVE</span></td>
-      </tr>`;
-    }).join('') + '</tbody></table>';
-  }
-
-  const recent = [...pastWars].reverse();
-  document.getElementById('wars-past-count').textContent = recent.length + ' recorded';
-  const pastEl = document.getElementById('wars-past-table');
-  if (!recent.length) {
-    pastEl.innerHTML = '<div class="state-box">No ended wars in the past 3 days.</div>';
-  } else {
-    pastEl.innerHTML = `<table><thead><tr>
-      <th>Town</th><th>Attacker</th><th>Defender</th><th>Session</th>
-      <th>Final Score (ATK / DEF)</th><th>Ended</th><th>Result</th>
-    </tr></thead><tbody>` +
-    recent.map(w => {
-      const { atkFinal, defFinal } = calcPoints(w);
-      return `<tr onclick="openWarModal('${esc(w.id)}')">
-        <td class="town">${esc(w.town)}</td>
-        <td class="atk">${esc(w.attacker)}</td>
-        <td class="def">${esc(w.defender)}</td>
-        <td class="mono muted">S-${w.session}</td>
-        <td>${ptsCell(atkFinal, defFinal)}</td>
-        <td class="mono muted">${timeAgo(w.endedAt)}</td>
-        <td>${winnerTag(w)}</td>
-      </tr>`;
-    }).join('') + '</tbody></table>';
-  }
-}
-
-// ═══════════════════════════════════════════════════════════
-// WAR MODAL
-// ═══════════════════════════════════════════════════════════
-function openWarModal(id) {
-  const w = [...liveWars, ...pastWars].find(x => x.id === id);
-  if (!w) return;
-
-  const { atkFinal, defFinal } = calcPoints(w);
-  const tot  = atkFinal + defFinal;
-  const aPct = tot ? Math.round(atkFinal / tot * 100) : 50;
-  const mapUrl = `https://map.rulercraft.com/?x=${Math.round(w.x || 0)}&z=${Math.round(w.z || 0)}&zoom=5`;
-  const sessMax = w.sessMax || 3;
-  const sb = w.siegeBalance || 0;
-
-  let bColor = 'var(--dim)';
-  if (w.isOngoing) {
-    if (w.bannerCtrl === 'Attackers') bColor = 'var(--red2)';
-    else if (w.bannerCtrl === 'Defenders') bColor = 'var(--green2)';
-  }
-
-  // Siege balance: positive = attacker (red), negative = defender (green)
-  const sbColor = sb > 0 ? 'var(--red2)' : sb < 0 ? 'var(--green2)' : 'var(--dim)';
-  const sbLabel = sb > 0 ? `+${sb} (Attacker)` : sb < 0 ? `${sb} (Defender)` : '0 (Neutral)';
-
-  document.getElementById('m-war').innerHTML = `
+  document.getElementById('m-war').innerHTML=`
     <button class="modal-close" onclick="closeOverlay('o-war')">✕</button>
     <div class="wm-header">
       <div class="wm-town">${esc(w.town)}</div>
       <div class="wm-meta">
-        ${w.isOngoing ? '<span class="tag tag-live">LIVE</span>' : winnerTag(w)}
+        ${w.isOngoing?'<span class="tag tag-live">LIVE</span>':winnerTag(w)}
         <span>Session ${w.session} / ${sessMax}</span>
-        <span>${esc(w.siegeType || 'Conquest')}</span>
-        ${w.isOngoing && w.timeLeft && w.timeLeft !== 'N/A' ? `<span class="war-timer">⏱ ${esc(w.timeLeft)} remaining</span>` : ''}
-        ${!w.isOngoing ? `<span style="color:var(--muted)">${timeAgo(w.endedAt)}</span>` : ''}
-        ${w.x != null ? `<a class="map-link" href="${mapUrl}" target="_blank" rel="noopener">↗ Open on map</a>` : ''}
+        <span>${esc(w.siegeType||'Conquest')}</span>
+        ${w.isOngoing&&w.timeLeft&&w.timeLeft!=='N/A'?`<span class="war-timer">⏱ ${esc(w.timeLeft)} remaining</span>`:''}
+        ${!w.isOngoing?`<span style="color:var(--muted)">${timeAgo(w.endedAt)}</span>`:''}
+        ${w.x!=null?`<a class="map-link" href="${mapUrl}" target="_blank" rel="noopener">↗ Open on map</a>`:''}
       </div>
     </div>
     <div class="wm-body">
-      ${!w.isOngoing ? `<div class="winner-banner">RESULT: <strong style="color:${w.winner==='attacker'?'var(--red2)':'var(--green2)'}">
-        ${esc(w.winner==='attacker' ? w.attacker : w.defender)} won
-      </strong> &nbsp;·&nbsp; ${w.winner==='attacker'?'Attacker':'Defender'} Victory</div>` : ''}
+      ${!w.isOngoing?`<div class="winner-banner">RESULT: <strong style="color:${w.winner==='attacker'?'var(--red2)':'var(--green2)'}">${esc(w.winner==='attacker'?w.attacker:w.defender)} won</strong> &nbsp;·&nbsp; ${w.winner==='attacker'?'Attacker':'Defender'} Victory</div>`:''}
       <div class="score-split">
         <div>
           <div class="score-role">Attacker</div>
           <div class="score-nation r">${esc(w.attacker)}</div>
           <div class="score-pts r">${atkFinal.toLocaleString()}</div>
-          ${w.atkPts !== atkFinal ? `<div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:3px">base: ${w.atkPts.toLocaleString()}</div>` : ''}
+          ${w.atkPts!==atkFinal?`<div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:3px">base: ${w.atkPts.toLocaleString()}</div>`:''}
         </div>
         <div class="score-center">
           <div class="vs-text">VS</div>
@@ -848,319 +636,374 @@ function openWarModal(id) {
             <div class="bar-labels"><span style="color:var(--red2)">ATK ${aPct}%</span><span style="color:var(--green2)">${100-aPct}% DEF</span></div>
             <div class="bar-track"><div class="bar-fill" style="width:${aPct}%"></div></div>
           </div>
-          ${sb !== 0 ? `<div class="siege-balance-box">
-            <div class="sbl">Siege Balance</div>
-            <div class="sbv" style="color:${sbColor}">${sbLabel}</div>
-          </div>` : ''}
-          ${w.isOngoing ? `<div class="banner-box">
-            <div class="bl">Banner Control</div>
-            <div class="bv" style="color:${bColor}">${w.bannerCtrl === 'Contested' ? 'Contested' : esc(w.bannerCtrl) + ' (' + w.bannerCount + ')'}</div>
-          </div>` : ''}
+          ${sb!==0?`<div class="siege-balance-box"><div class="sbl">Siege Balance</div><div class="sbv" style="color:${sbColor}">${sbLabel}</div></div>`:''}
+          ${w.isOngoing?`<div class="banner-box"><div class="bl">Banner Control</div><div class="bv" style="color:${bColor}">${w.bannerCtrl==='Contested'?'Contested':esc(w.bannerCtrl)+' ('+w.bannerCount+')'}</div></div>`:''}
         </div>
         <div style="text-align:right">
           <div class="score-role">Defender</div>
           <div class="score-nation g">${esc(w.defender)}</div>
           <div class="score-pts g">${defFinal.toLocaleString()}</div>
-          ${w.defPts !== defFinal ? `<div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:3px">base: ${w.defPts.toLocaleString()}</div>` : ''}
+          ${w.defPts!==defFinal?`<div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:3px">base: ${w.defPts.toLocaleString()}</div>`:''}
         </div>
       </div>
       <div class="detail-grid">
         <div class="detail-cell"><div class="dl">Town</div><div class="dv">${esc(w.town)}</div></div>
-        <div class="detail-cell"><div class="dl">Type</div><div class="dv">${esc(w.siegeType || 'Conquest')}</div></div>
+        <div class="detail-cell"><div class="dl">Type</div><div class="dv">${esc(w.siegeType||'Conquest')}</div></div>
         <div class="detail-cell"><div class="dl">Session</div><div class="dv">${w.session} / ${sessMax}</div></div>
-        <div class="detail-cell"><div class="dl">Siege Status</div><div class="dv">${esc(w.siegeStatus) || '—'}</div></div>
-        ${!w.isOngoing ? `<div class="detail-cell" style="grid-column:1/-1">
-          <div class="dl">Ended</div>
-          <div class="dv">${timeAgo(w.endedAt)} · ${new Date(w.endedAt).toLocaleString()}</div>
-        </div>` : ''}
+        <div class="detail-cell"><div class="dl">Status</div><div class="dv">${esc(w.siegeStatus)||'—'}</div></div>
+        ${!w.isOngoing?`<div class="detail-cell" style="grid-column:1/-1"><div class="dl">Ended</div><div class="dv">${timeAgo(w.endedAt)} · ${new Date(w.endedAt).toLocaleString()}</div></div>`:''}
       </div>
+      ${warPlayerHtml}
     </div>`;
   document.getElementById('o-war').classList.add('open');
 }
 
-// ═══════════════════════════════════════════════════════════
-// NOTIFICATIONS — Nation autocomplete (OneSignal handles push)
-// ═══════════════════════════════════════════════════════════
-document.getElementById('notif-nation-input').addEventListener('input', function() {
-  const val  = this.value.trim().toLowerCase();
-  const list = document.getElementById('notif-nation-ac');
-  if (!val || !rawMarkers) { list.classList.remove('show'); return; }
-  const nations = getNations(rawMarkers).filter(n => n.toLowerCase().includes(val)).slice(0, 10);
-  if (!nations.length) { list.classList.remove('show'); return; }
-  list.innerHTML = nations.map(n =>
-    `<div class="autocomplete-item" onclick="addNotifNation('${esc(n)}')">${esc(n)}</div>`
-  ).join('');
-  list.classList.add('show');
-});
-
-document.getElementById('notif-nation-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') { const v = this.value.trim(); if (v) addNotifNation(v); }
-});
-
-function addNotifNation(name) {
-  if (!notifNations.includes(name)) {
-    notifNations.push(name);
-    renderNotifTags();
-    // Store in localStorage so nations persist
-    try { localStorage.setItem('rc_watch_nations', JSON.stringify(notifNations)); } catch(e) {}
-  }
-  document.getElementById('notif-nation-input').value = '';
-  document.getElementById('notif-nation-ac').classList.remove('show');
+// ═══ LEADERBOARD ═════════════════════════════════════════════════════════════
+function setLbTab(tab,btn){
+  lbTab=tab; lbSort='rating'; lbDir=-1;
+  document.querySelectorAll('.lb-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLB();
 }
 
-function removeNotifNation(name) {
-  notifNations = notifNations.filter(n => n !== name);
-  renderNotifTags();
-  try { localStorage.setItem('rc_watch_nations', JSON.stringify(notifNations)); } catch(e) {}
+function renderLB(){
+  const el=document.getElementById('lb-content');
+  if(lbTab==='players') renderPlayerLB(el); else renderNationLB(el);
 }
 
-function renderNotifTags() {
-  document.getElementById('notif-tags').innerHTML = notifNations.map(n =>
-    `<span class="notif-nation-tag">${esc(n)}<button onclick="removeNotifNation('${esc(n)}')" title="Remove">✕</button></span>`
-  ).join('');
+function getTier(r){return r>=1600?'S':r>=1350?'A':r>=1100?'B':r>=850?'C':'D';}
+
+function renderPlayerLB(el){
+  const entries=Object.entries(ratingsData.players||{});
+  if(!entries.length){el.innerHTML='<div class="state-box">No player ratings yet.<br><span style="font-size:.68rem">Ratings accumulate as wars are tracked via the mod.</span></div>';return;}
+  const getV=([,d])=>lbSort==='rating'?d.rating:lbSort==='kd'?d.kills/Math.max(d.deaths,1):lbSort==='battles'?d.battles:lbSort==='wr'?d.wins/Math.max(d.battles,1):d.rating;
+  entries.sort((a,b)=>lbDir*(getV(b)-getV(a)));
+  el.innerHTML=`<table class="lb-table"><thead><tr>
+    <th class="rk">#</th><th>Player</th><th>Nation</th>
+    <th class="${lbSort==='rating'?'sorted':''}" onclick="lbSortBy('rating')">Rating</th>
+    <th>Tier</th>
+    <th class="${lbSort==='battles'?'sorted':''}" onclick="lbSortBy('battles')">Wars</th>
+    <th class="${lbSort==='wr'?'sorted':''}" onclick="lbSortBy('wr')">Win %</th>
+    <th class="${lbSort==='kd'?'sorted':''}" onclick="lbSortBy('kd')">K/D</th>
+    <th>Kills</th>
+  </tr></thead><tbody>`+entries.map(([name,d],i)=>{
+    const tier=getTier(d.rating);
+    const rc=i===0?'rk1':i===1?'rk2':i===2?'rk3':'';
+    const kd=(d.kills/Math.max(d.deaths,1)).toFixed(2);
+    const wr=d.battles?((d.wins/d.battles)*100).toFixed(0)+'%':'—';
+    return `<tr><td class="rk ${rc}">${i+1}</td><td style="font-weight:600;color:var(--white)">${esc(name)}</td><td><span class="nation-tag-sm">${esc(d.nation||'—')}</span></td><td class="rat">${d.rating}</td><td><span class="tier tier-${tier}">${tier}</span></td><td class="mono muted">${d.battles}</td><td class="mono muted">${wr}</td><td class="mono muted">${kd}</td><td class="mono muted">${d.kills}</td></tr>`;
+  }).join('')+'</tbody></table>';
 }
 
-// Load saved nations on startup
-try {
-  const saved = localStorage.getItem('rc_watch_nations');
-  if (saved) notifNations = JSON.parse(saved);
-  renderNotifTags();
-} catch(e) {}
-
-// ═══════════════════════════════════════════════════════════
-// TRAVEL PLANNER
-// ═══════════════════════════════════════════════════════════
-function buildTravelTargets() {
-  if (!rawMarkers) return [];
-  const targets = [];
-  // Wars
-  const siegeMarkers = rawMarkers?.sets?.['siegewar.markerset']?.markers || {};
-  for (const [id, m] of Object.entries(siegeMarkers)) {
-    if (!m.desc || !m.desc.includes('Siege:')) continue;
-    const plain = m.desc.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
-    const tm    = plain.match(/Town:\s*(\S+)/i);
-    const name  = tm ? tm[1].replace(/_/g, ' ') : (m.label || id);
-    targets.push({ type:'war', id, name, label: '⚔ ' + name + ' (war)', x: m.x, z: m.z });
-  }
-  // Towns
-  for (const t of parseTownMarkers(rawMarkers)) {
-    targets.push({ type:'town', id: t.id, name: t.name, label: '🏘 ' + t.name, x: t.x, z: t.z });
-  }
-  return targets;
+function renderNationLB(el){
+  const entries=Object.entries(ratingsData.nations||{});
+  if(!entries.length){el.innerHTML='<div class="state-box">No nation ratings yet.<br><span style="font-size:.68rem">Ratings accumulate as wars are tracked via the mod.</span></div>';return;}
+  const getV=([n,d])=>{
+    const members=Object.values(ratingsData.players||{}).filter(p=>p.nation===n);
+    const rs=members.length?Math.round(members.reduce((s,p)=>s+p.rating,0)/members.length*Math.pow(members.length/5,0.4)):d.combatRating;
+    const cw=Math.max(0.5,Math.min(0.65,0.5+0.15*(d.wars/15)));
+    return Math.round(cw*d.combatRating+(1-cw)*rs);
+  };
+  if(lbSort==='rating') entries.sort((a,b)=>lbDir*(getV(b)-getV(a)));
+  else if(lbSort==='wars') entries.sort((a,b)=>lbDir*(b[1].wars-a[1].wars));
+  else if(lbSort==='wr') entries.sort((a,b)=>lbDir*(b[1].wins/Math.max(b[1].wars,1)-a[1].wins/Math.max(a[1].wars,1)));
+  el.innerHTML=`<table class="lb-table"><thead><tr>
+    <th class="rk">#</th><th>Nation</th>
+    <th class="${lbSort==='rating'?'sorted':''}" onclick="lbSortBy('rating')">Rating</th>
+    <th>Tier</th>
+    <th class="${lbSort==='wars'?'sorted':''}" onclick="lbSortBy('wars')">Wars</th>
+    <th class="${lbSort==='wr'?'sorted':''}" onclick="lbSortBy('wr')">Win %</th>
+    <th>Members</th>
+  </tr></thead><tbody>`+entries.map(([name,d],i)=>{
+    const rating=Math.round((()=>{const members=Object.values(ratingsData.players||{}).filter(p=>p.nation===name);const rs=members.length?Math.round(members.reduce((s,p)=>s+p.rating,0)/members.length*Math.pow(members.length/5,0.4)):d.combatRating;const cw=Math.max(0.5,Math.min(0.65,0.5+0.15*(d.wars/15)));return cw*d.combatRating+(1-cw)*rs;})());
+    const tier=getTier(rating);
+    const rc=i===0?'rk1':i===1?'rk2':i===2?'rk3':'';
+    const wr=d.wars?((d.wins/d.wars)*100).toFixed(0)+'%':'—';
+    const members=Object.values(ratingsData.players||{}).filter(p=>p.nation===name).length;
+    return `<tr><td class="rk ${rc}">${i+1}</td><td style="font-weight:600;color:var(--white)">${esc(name)}</td><td class="rat">${rating}</td><td><span class="tier tier-${tier}">${tier}</span></td><td class="mono muted">${d.wars}</td><td class="mono muted">${wr}</td><td class="mono muted">${members}</td></tr>`;
+  }).join('')+'</tbody></table>';
 }
 
-function travelInput() {
-  const val  = document.getElementById('travel-input').value.trim().toLowerCase();
-  const list = document.getElementById('travel-ac');
-  travelSelected = null;
-  document.getElementById('travel-btn').disabled = true;
-  if (!val || !rawMarkers) { list.classList.remove('show'); return; }
-  const matches = buildTravelTargets()
-    .filter(t => t.name.toLowerCase().includes(val) || t.label.toLowerCase().includes(val))
-    .slice(0, 12);
-  if (!matches.length) { list.classList.remove('show'); return; }
-  list.innerHTML = matches.map(t => {
-    const enc = encodeURIComponent(JSON.stringify(t));
-    return `<div class="autocomplete-item" onclick="selectTravelTarget('${enc}')">${esc(t.label)}</div>`;
-  }).join('');
-  list.classList.add('show');
-}
+function lbSortBy(col){if(lbSort===col)lbDir*=-1;else{lbSort=col;lbDir=-1;}renderLB();}
 
-function selectTravelTarget(enc) {
-  try { travelSelected = JSON.parse(decodeURIComponent(enc)); }
-  catch(e) { console.error(e); return; }
-  document.getElementById('travel-input').value = travelSelected.name;
-  document.getElementById('travel-ac').classList.remove('show');
-  document.getElementById('travel-btn').disabled = false;
-}
-
-function dist2d(x1, z1, x2, z2) { return Math.sqrt((x1-x2)**2 + (z1-z2)**2); }
-
-function runTravel() {
-  if (!travelSelected || !rawMarkers) return;
-  const { x, z, name: targetName } = travelSelected;
-
-  // Only public-tp towns, and exclude the town you're travelling TO
-  const towns = parseTownMarkers(rawMarkers)
-    .filter(t => t.tpEnabled && t.name !== targetName);
-
-  if (!towns.length) {
-    document.getElementById('travel-result').classList.add('show');
-    document.getElementById('tr-town').textContent = 'No public-tp towns found';
+// ═══ LOGIN ═══════════════════════════════════════════════════════════════════
+async function openLogin(){
+  if(loggedInAs){
+    // Already logged in — show logout option
+    document.getElementById('login-content').innerHTML=`
+      <div style="text-align:center;padding:16px">
+        <div style="font-size:.9rem;color:var(--green2);margin-bottom:16px">✓ Logged in as <strong>${esc(loggedInAs)}</strong></div>
+        <button class="btn" style="background:var(--red);width:auto;padding:8px 20px" onclick="doLogout()">Log out</button>
+      </div>`;
+    document.getElementById('o-login').classList.add('open');
     return;
   }
-  travelResults = towns
-    .map(t => ({ ...t, distance: Math.round(dist2d(x, z, t.x, t.z)) }))
-    .sort((a, b) => a.distance - b.distance);
-  travelIdx = 0;
-  showTravelResult();
+  document.getElementById('o-login').classList.add('open');
+  document.getElementById('login-content').innerHTML='<div class="loading-row"><span class="spin"></span>Generating code...</div>';
+  try{
+    const r=await fetch('/api/login-request',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+    const d=await r.json();
+    loginSessionId=d.sessionId;
+    const expiresIn=Math.round((d.expiresAt-Date.now())/1000);
+    document.getElementById('login-content').innerHTML=`
+      <div class="login-code">${d.code}</div>
+      <div class="login-timer" id="login-timer">Expires in ${expiresIn}s — refreshes every minute</div>
+      <div class="login-instructions">
+        1. Make sure you have the <strong>RulercraftUtils mod</strong> installed<br>
+        2. Join <strong>play.rulercraft.com</strong><br>
+        3. Type in chat: <code>/msg YourUsername ${d.code}</code><br>
+        4. This tab will log you in automatically
+      </div>`;
+    // Start polling
+    startLoginPoll();
+    // Countdown timer
+    let secs=expiresIn;
+    const tmr=setInterval(()=>{secs--;const el=document.getElementById('login-timer');if(el) el.textContent='Expires in '+Math.max(0,secs)+'s';if(secs<=0)clearInterval(tmr);},1000);
+  }catch(e){
+    document.getElementById('login-content').innerHTML='<div class="notif-status err" style="display:block">Failed to generate code: '+e.message+'</div>';
+  }
 }
 
-function showTravelResult() {
-  const r = travelResults[travelIdx];
-  if (!r) return;
-  const mapUrl = `https://map.rulercraft.com/?x=${Math.round(r.x)}&z=${Math.round(r.z)}&zoom=1`;
-  document.getElementById('tr-town').textContent    = r.name;
-  document.getElementById('tr-nation').textContent  = r.nation || '—';
-  document.getElementById('tr-dist').textContent    = r.distance.toLocaleString() + ' blocks';
-  document.getElementById('tr-map').href            = mapUrl;
-  document.getElementById('travel-idx').textContent = `#${travelIdx+1} of ${travelResults.length}`;
+function startLoginPoll(){
+  clearInterval(loginPollTimer);
+  loginPollTimer=setInterval(async()=>{
+    if(!loginSessionId) return;
+    try{
+      const r=await fetch('/api/login-poll',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:loginSessionId})});
+      const d=await r.json();
+      if(d.ready){
+        clearInterval(loginPollTimer);
+        sessionToken=d.token; loggedInAs=d.username;
+        localStorage.setItem('rc_token',sessionToken);
+        localStorage.setItem('rc_user',loggedInAs);
+        document.getElementById('login-content').innerHTML=`<div style="text-align:center;padding:16px"><div style="font-size:1rem;color:var(--green2);margin-bottom:12px">✓ Logged in as <strong>${esc(loggedInAs)}</strong>!</div><button class="btn" style="width:auto;padding:8px 20px" onclick="closeOverlay('o-login')">Continue</button></div>`;
+        renderHeader();
+      }
+    }catch(e){}
+  },2000);
+}
+
+function doLogout(){
+  sessionToken=''; loggedInAs='';
+  localStorage.removeItem('rc_token'); localStorage.removeItem('rc_user');
+  closeOverlay('o-login'); renderHeader();
+}
+
+// ═══ NOTIFICATIONS ═══════════════════════════════════════════════════════════
+document.getElementById('notif-nation-input').addEventListener('input',function(){
+  const val=this.value.trim().toLowerCase(), list=document.getElementById('notif-nation-ac');
+  if(!val||!rawMarkers){list.classList.remove('show');return;}
+  const nations=getNations(rawMarkers).filter(n=>n.toLowerCase().includes(val)).slice(0,10);
+  if(!nations.length){list.classList.remove('show');return;}
+  list.innerHTML=nations.map(n=>`<div class="autocomplete-item" onclick="addNotifNation('${esc(n)}')">${esc(n)}</div>`).join('');
+  list.classList.add('show');
+});
+document.getElementById('notif-nation-input').addEventListener('keydown',function(e){if(e.key==='Enter'){const v=this.value.trim();if(v) addNotifNation(v);}});
+
+function addNotifNation(name){
+  if(!notifNations.includes(name)){notifNations.push(name);renderNotifTags();try{localStorage.setItem('rc_watch_nations',JSON.stringify(notifNations));}catch(e){}}
+  document.getElementById('notif-nation-input').value='';document.getElementById('notif-nation-ac').classList.remove('show');
+}
+function removeNotifNation(name){notifNations=notifNations.filter(n=>n!==name);renderNotifTags();try{localStorage.setItem('rc_watch_nations',JSON.stringify(notifNations));}catch(e){}}
+function renderNotifTags(){document.getElementById('notif-tags').innerHTML=notifNations.map(n=>`<span class="notif-nation-tag">${esc(n)}<button onclick="removeNotifNation('${esc(n)}')" title="Remove">✕</button></span>`).join('');}
+try{const s=localStorage.getItem('rc_watch_nations');if(s){notifNations=JSON.parse(s);renderNotifTags();}}catch(e){}
+
+// ═══ TRAVEL PLANNER ══════════════════════════════════════════════════════════
+function buildTravelTargets(){
+  if(!rawMarkers) return [];
+  const t=[];
+  const sm=rawMarkers?.sets?.['siegewar.markerset']?.markers||{};
+  for(const[id,m] of Object.entries(sm)){
+    if(!m.desc||!m.desc.includes('Siege:')) continue;
+    const pl=m.desc.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ');
+    const tm=pl.match(/Town:\s*(\S+)/i);
+    const name=tm?tm[1].replace(/_/g,' '):(m.label||id);
+    t.push({type:'war',id,name,label:'⚔ '+name+' (war)',x:m.x,z:m.z});
+  }
+  for(const tw of parseTownMarkers(rawMarkers)) t.push({type:'town',id:tw.id,name:tw.name,label:'🏘 '+tw.name,x:tw.x,z:tw.z});
+  return t;
+}
+
+function travelInput(){
+  const val=document.getElementById('travel-input').value.trim().toLowerCase();
+  const list=document.getElementById('travel-ac');
+  travelSelected=null; document.getElementById('travel-btn').disabled=true;
+  if(!val||!rawMarkers){list.classList.remove('show');return;}
+  const matches=buildTravelTargets().filter(t=>t.name.toLowerCase().includes(val)||t.label.toLowerCase().includes(val)).slice(0,12);
+  if(!matches.length){list.classList.remove('show');return;}
+  list.innerHTML=matches.map(t=>`<div class="autocomplete-item" onclick="selectTravel('${encodeURIComponent(JSON.stringify(t))}')">${esc(t.label)}</div>`).join('');
+  list.classList.add('show');
+}
+
+function selectTravel(enc){try{travelSelected=JSON.parse(decodeURIComponent(enc));}catch(e){return;}document.getElementById('travel-input').value=travelSelected.name;document.getElementById('travel-ac').classList.remove('show');document.getElementById('travel-btn').disabled=false;}
+
+function runTravel(){
+  if(!travelSelected||!rawMarkers) return;
+  const{x,z,name:tName}=travelSelected;
+  const towns=parseTownMarkers(rawMarkers).filter(t=>t.tpEnabled&&t.name!==tName);
+  if(!towns.length){document.getElementById('travel-result').classList.add('show');document.getElementById('tr-town').textContent='No public-tp towns found';return;}
+  travelResults=towns.map(t=>({...t,distance:Math.round(Math.sqrt((x-t.x)**2+(z-t.z)**2))})).sort((a,b)=>a.distance-b.distance);
+  travelIdx=0; showTravelResult();
+}
+
+function showTravelResult(){
+  const r=travelResults[travelIdx]; if(!r) return;
+  const mapUrl=`https://map.rulercraft.com/?x=${Math.round(r.x)}&z=${Math.round(r.z)}&zoom=1`;
+  document.getElementById('tr-town').textContent=r.name;
+  document.getElementById('tr-nation').textContent=r.nation||'—';
+  document.getElementById('tr-dist').textContent=r.distance.toLocaleString()+' blocks';
+  document.getElementById('tr-map').href=mapUrl;
+  document.getElementById('travel-idx').textContent=`#${travelIdx+1} of ${travelResults.length}`;
   document.getElementById('travel-result').classList.add('show');
 }
+function travelNext(){if(!travelResults.length) return;travelIdx=(travelIdx+1)%travelResults.length;showTravelResult();}
 
-function travelNext() {
-  if (!travelResults.length) return;
-  travelIdx = (travelIdx + 1) % travelResults.length;
-  showTravelResult();
-}
+// ═══ ADMIN ═══════════════════════════════════════════════════════════════════
+let localAlliances={groups:[]};
 
-// ═══════════════════════════════════════════════════════════
-// ADMIN  (Ctrl+Shift+A)
-// ═══════════════════════════════════════════════════════════
-document.addEventListener('keydown', e => {
-  if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey&&e.shiftKey&&e.key==='A'){
     e.preventDefault();
+    if(loggedInAs!=='Zwaqs'){return;}
     document.getElementById('admin-overlay').classList.toggle('open');
-    adminRenderPastWars();
+    if(document.getElementById('admin-overlay').classList.contains('open')) adminLoad();
   }
 });
 
-function adminLog(msg, cls) {
-  const el = document.getElementById('admin-log');
-  const d  = document.createElement('div');
-  if (cls) d.className = cls;
-  d.textContent = '[' + fmtTime(new Date()) + '] ' + msg;
-  el.appendChild(d);
-  el.scrollTop = el.scrollHeight;
+async function adminLoad(){
+  try{
+    const[aR,pWR,uR]=await Promise.all([
+      fetch('/api/alliances').then(r=>r.json()).catch(()=>({groups:[]})),
+      fetch('/api/past-wars').then(r=>r.json()).catch(()=>[]),
+      fetch('/api/ratings').then(r=>r.json()).catch(()=>({players:{},nations:{}}))
+    ]);
+    localAlliances=aR||{groups:[]};
+    renderAllianceGroups();
+    adminRenderPastWars(pWR);
+    adminRenderRatingsSummary(uR);
+  }catch(e){adminLog('Load error: '+e.message,'err');}
 }
 
-function adminRenderPastWars() {
-  const el = document.getElementById('admin-wars-list');
-  if (!pastWars.length) { el.innerHTML = '<div style="color:var(--muted);font-size:.72rem">No past wars.</div>'; return; }
-  el.innerHTML = pastWars.map(w => `
-    <div class="admin-war-row">
-      <span style="color:var(--white)">${esc(w.town)}</span>
-      <span style="color:var(--body)">${esc(w.attacker)} vs ${esc(w.defender)}</span>
-      <span style="color:var(--muted)">${timeAgo(w.endedAt)}</span>
-      <button class="admin-btn danger" style="padding:3px 9px;font-size:.62rem" onclick="adminDeleteWar('${esc(w.id)}')">Delete</button>
+function renderAllianceGroups(){
+  const el=document.getElementById('alliance-groups');
+  if(!localAlliances.groups||!localAlliances.groups.length){el.innerHTML='<div style="color:var(--muted);font-size:.72rem">No groups yet.</div>';return;}
+  el.innerHTML=localAlliances.groups.map((g,gi)=>`
+    <div class="alliance-group">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <input style="background:var(--surf3);border:1px solid var(--line2);border-radius:3px;padding:3px 7px;color:var(--white);font-family:'IBM Plex Mono',monospace;font-size:.75rem;width:140px" value="${esc(g.name)}" oninput="localAlliances.groups[${gi}].name=this.value" placeholder="Group name">
+        <button class="admin-btn danger" style="padding:3px 8px;font-size:.62rem" onclick="localAlliances.groups.splice(${gi},1);renderAllianceGroups()">Remove</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px">
+        ${(g.nations||[]).map((n,ni)=>`<span class="alliance-nation-tag">${esc(n)}<button onclick="localAlliances.groups[${gi}].nations.splice(${ni},1);renderAllianceGroups()">✕</button></span>`).join('')}
+      </div>
+      <div style="display:flex;gap:6px">
+        <input id="ag-input-${gi}" style="background:var(--surf3);border:1px solid var(--line2);border-radius:3px;padding:3px 7px;color:var(--white);font-family:'IBM Plex Mono',monospace;font-size:.72rem;flex:1" placeholder="Add nation...">
+        <button class="admin-btn" style="padding:3px 8px;font-size:.62rem" onclick="addNationToGroup(${gi})">+ Add</button>
+      </div>
     </div>`).join('');
 }
 
-async function adminForceRefresh() {
-  adminLog('Force refreshing...', 'info');
-  await fetchData(true);
-  adminLog('Done. Live: ' + liveWars.length + ', Past: ' + pastWars.length, 'ok');
+function addNationToGroup(gi){
+  const inp=document.getElementById('ag-input-'+gi);
+  const val=inp.value.trim(); if(!val) return;
+  localAlliances.groups[gi].nations=localAlliances.groups[gi].nations||[];
+  if(!localAlliances.groups[gi].nations.includes(val)) localAlliances.groups[gi].nations.push(val);
+  inp.value=''; renderAllianceGroups();
 }
 
-function adminDiag() {
-  if (!rawMarkers) { adminLog('No data yet.', 'err'); return; }
-  const sm = rawMarkers?.sets?.['siegewar.markerset']?.markers || {};
-  const tm = rawMarkers?.sets?.['towny.markerset']?.markers || {};
-  const icons = [...new Set(Object.values(sm).map(m=>m.icon))];
-  adminLog('Siege markers total: ' + Object.keys(sm).length, 'info');
-  adminLog('Siege icons seen: ' + (icons.join(', ')||'none'), 'info');
-  adminLog('Wars with Siege: in desc: ' + Object.values(sm).filter(m=>m.desc&&m.desc.includes('Siege:')).length, 'info');
-  adminLog('Live wars parsed: ' + parseSiegeMarkers(rawMarkers).length, 'info');
-  adminLog('Town markers: ' + Object.keys(tm).length, 'info');
-  const parsed = parseTownMarkers(rawMarkers);
-  adminLog('Towns parsed (fortress/town/ruler): ' + parsed.length, 'info');
-  adminLog('Towns with public TP: ' + parsed.filter(t=>t.tpEnabled).length, 'info');
-  const nations = getNations(rawMarkers);
-  adminLog('Nations: ' + nations.length + ' → ' + nations.slice(0,6).join(', ') + (nations.length>6?'...':''), 'info');
+function adminAddAllianceGroup(){
+  localAlliances.groups=localAlliances.groups||[];
+  localAlliances.groups.push({id:'g'+Date.now(),name:'New Group',nations:[]});
+  renderAllianceGroups();
 }
 
-async function adminClearPastWars() {
-  if (!confirm('Delete all past wars from server?')) return;
-  await fetch('/api/past-wars', { method:'DELETE' });
-  pastWars = [];
-  renderAll();
-  adminLog('Cleared all past wars.', 'ok');
+async function adminSaveAlliances(){
+  try{
+    const r=await fetch('/api/alliances',{method:'POST',headers:{'Content-Type':'application/json','X-Session-Token':sessionToken},body:JSON.stringify(localAlliances)});
+    const d=await r.json();
+    if(d.ok) adminLog('Alliances saved.','ok'); else adminLog('Error: '+d.error,'err');
+  }catch(e){adminLog('Save failed: '+e.message,'err');}
 }
 
-async function adminDeleteWar(id) {
-  await fetch('/api/past-wars/' + encodeURIComponent(id), { method:'DELETE' });
-  pastWars = pastWars.filter(w => w.id !== id);
-  renderAll();
-  adminLog('Deleted: ' + id, 'ok');
+function adminRenderPastWars(wars){
+  const el=document.getElementById('admin-wars-list');
+  if(!wars||!wars.length){el.innerHTML='<div style="color:var(--muted);font-size:.72rem">No past wars.</div>';return;}
+  el.innerHTML=wars.map(w=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--line);font-size:.72rem;gap:8px"><span style="color:var(--white)">${esc(w.town)}</span><span style="color:var(--body)">${esc(w.attacker)} vs ${esc(w.defender)}</span><span style="color:var(--muted)">${timeAgo(w.endedAt)}</span><button class="admin-btn danger" style="padding:2px 7px;font-size:.6rem" onclick="adminDeleteWar('${esc(w.id)}')">Del</button></div>`).join('');
 }
 
-function adminInjectWar() {
-  const town = document.getElementById('admin-inject-town').value.trim();
-  const atk  = document.getElementById('admin-inject-atk').value.trim();
-  const def  = document.getElementById('admin-inject-def').value.trim();
-  if (!town||!atk||!def) { adminLog('Fill all three fields.', 'err'); return; }
-  const id = '__injected__' + Date.now();
-  injectedWars.push({
-    id, town, attacker:atk, defender:def, isOngoing:true,
-    atkPts:0, defPts:0, siegeBalance:0,
-    session:1, sessMax:3, bannerCtrl:'Contested', bannerCount:0,
-    siegeType:'Conquest (Test)', siegeStatus:'Contested', timeLeft:null, x:0, z:0, _injected:true
-  });
-  liveWars = [...parseSiegeMarkers(rawMarkers||{}), ...injectedWars];
-  renderAll();
-  adminLog('Injected: ' + town + ' (' + atk + ' vs ' + def + ')', 'ok');
+function adminRenderRatingsSummary(rt){
+  const el=document.getElementById('admin-ratings-summary');
+  const pc=Object.keys(rt.players||{}).length, nc=Object.keys(rt.nations||{}).length;
+  el.textContent=`${pc} players, ${nc} nations tracked`;
 }
 
-function adminClearInjected() {
-  injectedWars = [];
-  liveWars = parseSiegeMarkers(rawMarkers || {});
-  renderAll();
-  adminLog('Removed injected wars.', 'ok');
+async function adminRefresh(){adminLog('Refreshing...','info');await fetchData(true);adminLoad();adminLog('Done.','ok');}
+
+function adminDiag(){
+  if(!rawMarkers){adminLog('No data.','err');return;}
+  const sm=rawMarkers?.sets?.['siegewar.markerset']?.markers||{};
+  const tm=rawMarkers?.sets?.['towny.markerset']?.markers||{};
+  const icons=[...new Set(Object.values(sm).map(m=>m.icon))];
+  adminLog('Siege markers: '+Object.keys(sm).length+' | icons: '+icons.join(', '),'info');
+  adminLog('Wars with Siege: '+Object.values(sm).filter(m=>m.desc&&m.desc.includes('Siege:')).length,'info');
+  adminLog('Town markers: '+Object.keys(tm).length,'info');
+  adminLog('Public TP towns: '+parseTownMarkers(rawMarkers).filter(t=>t.tpEnabled).length,'info');
+  adminLog('Nations: '+getNations(rawMarkers).length,'info');
+  adminLog('Player ratings: '+Object.keys(ratingsData.players||{}).length,'info');
 }
 
-// ═══════════════════════════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════════════════════════
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+async function adminClearPast(){
+  if(!confirm('Delete all past wars?')) return;
+  await fetch('/api/past-wars',{method:'DELETE',headers:{'X-Session-Token':sessionToken}});
+  pastWars=[]; renderAll(); adminLog('Cleared.','ok');
 }
-function fmtTime(d) {
-  return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-function timeAgo(ts) {
-  const s = Math.floor((Date.now()-ts)/1000);
-  if (s < 60)    return s + 's ago';
-  if (s < 3600)  return Math.floor(s/60) + 'm ago';
-  if (s < 86400) return Math.floor(s/3600) + 'h ago';
-  return Math.floor(s/86400) + 'd ago';
-}
-function ptsCell(atk, def) {
-  const tot = atk+def; const pct = tot ? Math.round(atk/tot*100) : 50;
-  return `<div class="pts-cell">
-    <span class="pts-num r">${atk.toLocaleString()}</span>
-    <div class="pts-bar"><div class="pts-fill" style="width:${pct}%"></div></div>
-    <span class="pts-num g">${def.toLocaleString()}</span>
-  </div>`;
-}
-function bannerText(w) {
-  if (!w.isOngoing) return '—';
-  if (w.bannerCtrl==='Contested') return 'Contested';
-  return w.bannerCtrl + ' (' + w.bannerCount + ')';
-}
-function winnerTag(w) {
-  if (w.winner==='attacker') return '<span class="tag tag-atkwin">ATK WIN</span>';
-  if (w.winner==='defender') return '<span class="tag tag-defwin">DEF WIN</span>';
-  return '<span class="tag tag-ended">ENDED</span>';
-}
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
-  document.getElementById('pg-'+id).classList.add('active');
-  document.getElementById('nav-'+id).classList.add('active');
-}
-function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
-function closeOut(e,id)   { if(e.target.id===id) closeOverlay(id); }
-document.addEventListener('keydown', e => {
-  if (e.key==='Escape') ['o-war','admin-overlay'].forEach(closeOverlay);
-});
-document.addEventListener('click', e => {
-  if (!e.target.closest('.autocomplete-wrap'))
-    document.querySelectorAll('.autocomplete-list').forEach(l=>l.classList.remove('show'));
-});
 
-// ═══════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════
+async function adminDeleteWar(id){
+  await fetch('/api/past-wars/'+encodeURIComponent(id),{method:'DELETE',headers:{'X-Session-Token':sessionToken}});
+  pastWars=pastWars.filter(w=>w.id!==id); renderAll(); adminLoad(); adminLog('Deleted: '+id,'ok');
+}
+
+async function adminClearRatings(){
+  if(!confirm('Reset ALL ratings? This is irreversible.')) return;
+  adminLog('Rating reset not yet implemented server-side.','err');
+}
+
+function adminRecomputeRatings(){adminLog('Recompute triggered server-side on next war end.','info');}
+
+function adminInject(){
+  const town=document.getElementById('ai-town').value.trim();
+  const atk=document.getElementById('ai-atk').value.trim();
+  const def=document.getElementById('ai-def').value.trim();
+  if(!town||!atk||!def){adminLog('Fill all fields.','err');return;}
+  const id='__injected__'+Date.now();
+  injectedWars.push({id,town,attacker:atk,defender:def,isOngoing:true,atkPts:0,defPts:0,siegeBalance:0,session:1,sessMax:3,bannerCtrl:'Contested',bannerCount:0,siegeType:'Conquest (Test)',siegeStatus:'Contested',timeLeft:null,x:0,z:0,_injected:true});
+  liveWars=[...parseSiegeMarkers(rawMarkers||{}),...injectedWars]; renderAll(); adminLog('Injected: '+town,'ok');
+}
+
+function adminClearInjected(){injectedWars=[];liveWars=parseSiegeMarkers(rawMarkers||{});renderAll();adminLog('Removed injected wars.','ok');}
+
+function adminLog(msg,cls){
+  const el=document.getElementById('admin-log');
+  const d=document.createElement('div');
+  if(cls) d.className=cls;
+  d.textContent='['+fmtTime(new Date())+'] '+msg;
+  el.appendChild(d); el.scrollTop=el.scrollHeight;
+}
+
+// ═══ HELPERS ═════════════════════════════════════════════════════════════════
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function fmtTime(d){return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+function timeAgo(ts){const s=Math.floor((Date.now()-ts)/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
+function ptsCell(atk,def){const tot=atk+def,pct=tot?Math.round(atk/tot*100):50;return`<div class="pts-cell"><span class="pts-num r">${atk.toLocaleString()}</span><div class="pts-bar"><div class="pts-fill" style="width:${pct}%"></div></div><span class="pts-num g">${def.toLocaleString()}</span></div>`;}
+function bannerText(w){if(!w.isOngoing)return'—';if(w.bannerCtrl==='Contested')return'Contested';return w.bannerCtrl+' ('+w.bannerCount+')';}
+function winnerTag(w){if(w.winner==='attacker')return'<span class="tag tag-atkwin">ATK WIN</span>';if(w.winner==='defender')return'<span class="tag tag-defwin">DEF WIN</span>';return'<span class="tag tag-ended">ENDED</span>';}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));document.getElementById('pg-'+id).classList.add('active');document.getElementById('nav-'+id).classList.add('active');if(id==='ranking') renderLB();}
+function closeOverlay(id){document.getElementById(id).classList.remove('open');}
+function closeOut(e,id){if(e.target.id===id)closeOverlay(id);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')['o-war','o-login','admin-overlay'].forEach(closeOverlay);});
+document.addEventListener('click',e=>{if(!e.target.closest('.autocomplete-wrap'))document.querySelectorAll('.autocomplete-list').forEach(l=>l.classList.remove('show'));});
+
+// ═══ INIT ════════════════════════════════════════════════════════════════════
 fetchData();
 </script>
 </body>
